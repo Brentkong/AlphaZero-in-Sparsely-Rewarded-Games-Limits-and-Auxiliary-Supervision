@@ -3,4 +3,3 @@ matplotlib
 wandb
 torch
 pandas
-tabulate
