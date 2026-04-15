@@ -1,0 +1,13 @@
+{
+  "games": {
+    "chomp": {
+      "title": "Chomp 9x10 vs Oracle",
+      "ylabel": "Grundy Number",
+      "traces": {
+        "Vanilla": "/Users/brentkong/Documents/AlphaZero-Chomp/games/Chomp/9x10/Vanilla/game_trace_90_ava.json",
+        "Multi-Frame": "/Users/brentkong/Documents/AlphaZero-Chomp/games/Chomp/9x10/Multi-Frame/game_trace_90_ava.json",
+        "AZAL": "/Users/brentkong/Documents/AlphaZero-Chomp/games/Chomp/9x10/Auxiliary/game_trace_90_ava.json"
+      }
+    }
+  }
+}
