@@ -179,6 +179,7 @@ cython_debug/
 models/
 *.pth.tar
 *.pt
+.vscode
 
 #Files
 Todo.md
