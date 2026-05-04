@@ -4,3 +4,4 @@ wandb
 torch
 pandas
 scipy
+tabulate

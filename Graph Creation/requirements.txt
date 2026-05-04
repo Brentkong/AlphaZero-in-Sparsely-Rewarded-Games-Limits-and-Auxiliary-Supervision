@@ -3,4 +3,5 @@ matplotlib
 wandb
 torch
 pandas
+scipy
 tabulate

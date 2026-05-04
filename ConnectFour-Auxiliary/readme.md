@@ -1,228 +1,183 @@
 # AlphaZero in Sparsely Rewarded Games: Limits and Auxiliary Supervision
 
-This repository contains code, experiments, and analysis for the paper **“AlphaZero in Sparsely Rewarded Games: Limits and Auxiliary Supervision.”** The project studies the gap between **strong play** and **perfect play** in AlphaZero-style agents on two oracle-evaluable domains:
+This repository contains the training code, oracle tooling, traces, and plotting scripts for **"AlphaZero in Sparsely Rewarded Games: Limits and Auxiliary Supervision."** The project studies the gap between strong empirical play and exact oracle-consistent play in AlphaZero-style agents.
 
-- **Chomp**
-- **Connect Four**
+The current checkout is organized as a directory-based snapshot of the experiment variants, not as a branch-only layout.
 
-The core comparison is between:
+## Current Layout
 
-- **Vanilla AlphaZero**
-- **Multi-frame AlphaZero**
-- **AlphaZero Auxiliary Loss (AZAL)**
+Top-level directories:
 
-The paper shows that vanilla AlphaZero can achieve strong performance without consistently recovering perfect play, while **AZAL** substantially improves oracle alignment, reaching **perfect play in Chomp** and **near-perfect play in Connect Four**.
+| Path | Contents |
+| --- | --- |
+| `Chomp-Vanilla/` | Vanilla AlphaZero for Chomp. Includes Chomp game logic, MCTS, ResNet, training loop, Grundy oracle wrapper, `grundy.cpp`, a checked-in macOS `libgrundy.dylib`, and saved trace figures. |
+| `Chomp-Multiframe/` | Multi-frame Chomp AlphaZero. Similar to `Chomp-Vanilla/`, but the game/model path uses a stack of recent board states. |
+| `Chomp-Auxiliary/` | Chomp AlphaZero with auxiliary oracle policy loss. Uses Grundy-derived best moves through `src/grundy_oracle.py`. |
+| `ConnectFour-Vanilla/` | Vanilla AlphaZero for 6x7 Connect Four. Includes Python training code and a bundled `connect4-master/` perfect solver source/binary/opening book. |
+| `ConnectFour-Auxiliary/` | Connect Four AlphaZero with auxiliary oracle policy loss. Uses `PerfectC4Oracle` and the bundled `connect4-master/` solver. |
+| `Graph Creation/` | Analysis scripts, trace JSONs, training-history CSVs, generated graph PNGs, and generated LaTeX tables. |
 
----
+Each experiment directory has:
 
-## Repository Purpose
+- `src/main.py` - training entry point
+- `src/config.py` - hyperparameters and solver/oracle settings
+- `src/play.py` - rollout/evaluation script that records trace data
+- `src/alphazero.py`, `src/mcts.py`, `src/resnet.py` - core AlphaZero implementation
+- `figures/` - saved trace JSONs and plots for that variant
+- `requirements.txt` - dependencies for that specific variant
 
-This repo is organized around separate branches for different game/variant combinations, plus a `main` branch for graph generation and analysis.
+The root also has `requirements.txt`. The current root and subproject requirements files list the same dependency set: `tqdm`, `matplotlib`, `wandb`, `torch`, `pandas`, `scipy`, and `tabulate`.
 
-In particular, this repository supports:
+## Methods
 
-- training and evaluation for AlphaZero-based agents,
-- branch-specific experiments for Chomp and Connect Four,
-- oracle-based trace analysis,
-- training-curve visualization,
-- generation of trace graphs and trace tables.
+The repository currently contains code for three AlphaZero-style variants:
 
-The current GitHub repository view shows analysis-oriented files and folders such as `config/`, `figures/`, `games/`, `history/`, `generate_trace_graphs.py`, `generate_trace_tables.py`, `graphs.py`, and `history.py`.
+- **Vanilla AlphaZero** - standard self-play, MCTS, policy loss, and value loss.
+- **Multi-frame AlphaZero** - Chomp-only variant that encodes several recent states instead of a single board.
+- **AlphaZero Auxiliary Loss (AZAL)** - adds an oracle-derived auxiliary policy loss:
 
----
-
-## Branch Overview
-
-The repository is split across the following branches:
-
-### `main`
-**Purpose:** graph making, trace generation, and analysis.
-
-This branch is intended for:
-- generating training curves,
-- creating trace graphs,
-- creating trace tables,
-- storing experiment history and analysis outputs.
-
-### Chomp branches
-
-#### `Chomp-Vanilla-AlphaZero`
-Vanilla AlphaZero experiments for **Chomp**.
-
-#### `Chomp-Multiframe-AlphaZero`
-Multi-frame AlphaZero experiments for **Chomp**.
-
-#### `Chomp-AuxiliaryLoss-AlphaZero`
-AZAL experiments for **Chomp**.
-
-### Connect Four branches
-
-#### `Connect-Four-Vanilla-AlphaZero`
-Vanilla AlphaZero experiments for **Connect Four**.
-
-#### `Connect-Four-AuxiliaryLoss-AlphaZero`
-AZAL experiments for **Connect Four**.
-
----
-
-## Research Summary
-
-AlphaZero combines a neural network with Monte Carlo Tree Search (MCTS) and self-play. While this often leads to very strong policies, the paper argues that **superhuman play is not the same as perfect play**. In sparse or structure-heavy games, the standard search-learning loop may fail to preserve the exact trajectories required for optimal play.
-
-This repository investigates that claim in two settings:
-
-- **Connect Four**, where exact game-theoretic evaluation is available through a perfect solver.
-- **Chomp**, where optimality is analyzed through **Grundy numbers** and the invariant of moving to `g = 0` states from winning positions.
-
-To address this limitation, the project introduces **AlphaZero Auxiliary Loss (AZAL)**, which augments the standard AlphaZero objective with an oracle-derived auxiliary policy loss while leaving self-play, MCTS, and value targets unchanged.
-
----
-
-## Expected Workflow
-
-A typical workflow is:
-
-1. Check out the branch for the experiment you want to run.
-2. Train or evaluate the model for that branch’s game/variant.
-3. Return to `main` for graph generation, trace analysis, and result visualization.
-
-Example:
-
-```bash
-git clone https://github.com/Brentkong/AlphaZero-in-Sparsely-Rewarded-Games-Limits-and-Auxiliary-Supervision.git
-cd AlphaZero-in-Sparsely-Rewarded-Games-Limits-and-Auxiliary-Supervision
-
-# switch to a branch
-git checkout Chomp-Vanilla-AlphaZero
-````
-
-To move back to analysis:
-
-```bash
-git checkout main
+```text
+L = L_policy + L_value + lambda_aux L_aux
 ```
 
----
+The oracle signal comes from Grundy-number analysis for Chomp and a perfect Connect Four solver for Connect Four.
 
 ## Installation
 
-Create a virtual environment and install dependencies:
+Create a virtual environment from the repository root:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate   # macOS/Linux
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-If you are on Windows:
+The subproject requirements files mirror the root dependency set right now, so installing the root file is enough for this checkout. You can still install from a specific folder if you are working with it independently:
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r ConnectFour-Auxiliary/requirements.txt
+pip install -r "Graph Creation/requirements.txt"
 ```
 
----
+## Running Training
 
-## Repository Structure
+Training scripts are meant to be run from the variant's `src/` directory so local imports and native oracle files resolve cleanly.
 
-On the `main` branch, the repository currently includes the following top-level items: `config/`, `figures/`, `games/`, `history/`, `.gitignore`, `generate_trace_graphs.py`, `generate_trace_tables.py`, `graphs.py`, `history.py`, and `requirements.txt`.
+Examples:
 
-A high-level interpretation of these directories/files is:
-
-* `config/` — experiment and plotting configuration
-* `figures/` — generated visualizations and paper figures
-* `games/` — game-specific data, traces, or outputs
-* `history/` — logged training history / saved metrics
-* `generate_trace_graphs.py` — trace-panel generation
-* `generate_trace_tables.py` — LaTeX or analysis-ready trace tables
-* `graphs.py` — plotting utilities
-* `history.py` — history loading / processing utilities
-
----
-
-## Methods Implemented
-
-This project centers on three AlphaZero-style variants:
-
-### 1. Vanilla AlphaZero
-
-Standard self-play + MCTS + policy/value learning.
-
-### 2. Multi-frame AlphaZero
-
-Uses a short stack of recent states instead of a single board snapshot, testing whether richer input representation improves recovery of perfect play.
-
-### 3. AlphaZero Auxiliary Loss (AZAL)
-
-Adds an oracle-derived auxiliary policy loss to the usual AlphaZero objective:
-
-```text
-L = L_policy + L_value + λ_aux L_aux
+```bash
+cd Chomp-Vanilla/src
+python main.py
 ```
 
-This extra supervision biases the policy toward oracle-consistent actions while keeping the rest of the AlphaZero pipeline unchanged.
+```bash
+cd Chomp-Multiframe/src
+python main.py
+```
 
----
+```bash
+cd Chomp-Auxiliary/src
+python main.py
+```
 
-## Analysis and Outputs
+```bash
+cd ConnectFour-Vanilla/src
+python main.py
+```
 
-This repository supports analysis such as:
+```bash
+cd ConnectFour-Auxiliary/src
+python main.py
+```
 
-* smoothed training-loss curves,
-* move-by-move trace tables,
-* deterministic greedy rollout trace panels,
-* oracle-match metrics,
-* longest oracle-consistent chain metrics.
+Training uses Weights & Biases through `wandb.init(...)` and writes model/optimizer checkpoints such as `model_<iteration>_<game>.pt` and `optimizer_<iteration>_<game>.pt` into the current working directory. Checkpoints and `wandb/` output are ignored by the root `.gitignore`.
 
-These analyses are used to distinguish **strong empirical play** from **exact oracle-consistent play**.
+Edit each variant's `src/config.py` to change board size, iteration counts, search counts, batch size, auxiliary-loss weight, or solver path.
 
----
+## Oracle Notes
 
-## Branch Guide
+For Chomp, the oracle wrappers use `grundy.cpp` through a native library:
 
-Use this quick mapping to navigate the repository:
+- macOS libraries are currently checked in as `src/libgrundy.dylib`.
+- On Linux, build `libgrundy.so` from the relevant `src/grundy.cpp`:
 
-* `main` → graph making + analysis
-* `Chomp-Vanilla-AlphaZero` → Chomp, vanilla AlphaZero
-* `Chomp-Multiframe-AlphaZero` → Chomp, multi-frame AlphaZero
-* `Chomp-AuxiliaryLoss-AlphaZero` → Chomp, AZAL
-* `Connect-Four-Vanilla-AlphaZero` → Connect Four, vanilla AlphaZero
-* `Connect-Four-AuxiliaryLoss-AlphaZero` → Connect Four, AZAL
+```bash
+g++ -O3 -std=c++17 -shared -fPIC grundy.cpp -o libgrundy.so
+```
 
----
+For Connect Four, each Connect Four directory includes `connect4-master/` with the solver source, a `c4solver` binary, and `7x6.book`. The current `src/config.py` files still point `solver_path` at an older absolute path under `/Users/brentkong/Documents/AlphaZero-Chomp/connect4-master`; update that value to the local solver directory if the old path is not present.
 
-## Paper
+Example local values:
 
-This repository accompanies the paper:
+```python
+'solver_path': '/Users/brentkong/Desktop/AlphaZero-Fresh/ConnectFour-Vanilla/connect4-master'
+```
 
-**AlphaZero in Sparsely Rewarded Games: Limits and Auxiliary Supervision**
+or:
 
-Main paper theme:
+```python
+'solver_path': '/Users/brentkong/Desktop/AlphaZero-Fresh/ConnectFour-Auxiliary/connect4-master'
+```
 
-* Vanilla AlphaZero can be strong without being perfect.
-* Multi-frame inputs alone do not fully solve the problem.
-* Stronger oracle-based supervision through AZAL materially improves optimality recovery.
+## Evaluation Scripts
 
----
+The `src/play.py` scripts load a saved checkpoint, run AlphaZero-vs-AlphaZero, AlphaZero-vs-player, or AlphaZero-vs-oracle style rollouts depending on the `mode` variable, and write trace JSON/PNG outputs.
+
+Current caveat: several `play.py` files contain hardcoded checkpoint and output paths under `/Users/brentkong/Documents/AlphaZero-Chomp/...`. Update those paths before using the scripts from this `AlphaZero-Fresh` checkout.
+
+Trace JSONs use:
+
+- `move_sequence`
+- `best_moves`
+- `grundy_numbers` for Chomp
+- `score_state` for Connect Four
+
+Those trace formats are consumed by the analysis scripts in `Graph Creation/`.
+
+## Graph Creation
+
+`Graph Creation/` contains the analysis side of the project:
+
+- `history/` - W&B-exported training-history CSV files
+- `games/` - checked-in trace JSONs by game, board size, and variant
+- `figures/graphs/` - generated loss curves and trace panels
+- `figures/tables/` - generated LaTeX metric tables
+- `generate_trace_graphs.py` - builds trace-panel PNGs from trace JSON config files
+- `generate_trace_tables.py` - builds compact LaTeX tables from trace JSON config files
+- `graphs.py` - plots training losses from CSV histories
+- `history.py` - exports a W&B run history to CSV
+
+Example commands:
+
+```bash
+cd "Graph Creation"
+python generate_trace_graphs.py --config config/chomp_9x10_config.json --outdir figures/graphs
+python generate_trace_tables.py --config config/chomp_9x10_config.json --outdir figures/tables
+```
+
+The checked-in config JSON files currently reference older absolute trace paths under `/Users/brentkong/Documents/AlphaZero-Chomp/...`. To rerun them from this checkout alone, point the `traces` entries at the local files under `Graph Creation/games/`.
+
+`graphs.py` and `history.py` also contain hardcoded local paths/W&B identifiers, so treat them as project scripts to edit for the run or machine you are using.
+
+## Generated Results Currently Checked In
+
+The repository includes generated assets, including:
+
+- Chomp trace JSONs and Grundy-number plots under each Chomp variant's `figures/`
+- Connect Four trace JSONs and score plots under each Connect Four variant's `figures/`
+- Combined training-loss graphs under `Graph Creation/figures/graphs/`
+- Trace panels for Chomp and Connect Four under `Graph Creation/figures/graphs/`
+- LaTeX metric tables under `Graph Creation/figures/tables/`
 
 ## Citation
 
-If you use this repository, please cite the associated paper.
+If you use this repository, please cite the associated paper:
 
 ```bibtex
 @article{alphazero_sparse_auxiliary,
   title={AlphaZero in Sparsely Rewarded Games: Limits and Auxiliary Supervision},
-  author={Brent Kong, Tony Yue Yu},
+  author={Brent Kong and Tony Yue Yu},
   journal={Preliminary work / under review},
   year={2026}
 }
 ```
-
----
-
-## Contact
-
-For questions about the codebase or experiments, please open an issue in the repository.
-
-
