@@ -1,0 +1,14 @@
+\begin{table*}[t]
+\centering
+\caption{Chomp trace-level metrics across model variants, reported separately for first-player and second-player turns.}
+\label{tab:chomp_trace_metrics}
+\begin{tabular}{llrllrl}
+\toprule
+Model & Oracle-match rate (P1) & Longest oracle-consistent chain (P1) & Preserve-to-$g=0$ rate (P1) & Oracle-match rate (P2) & Longest oracle-consistent chain (P2) & Preserve-to-$g=0$ rate (P2) \\
+\midrule
+Vanilla & 0.000 & 0 & 0.000 & 0.909 & 10 & 0.909 \\
+Multi-Frame & 0.250 & 1 & 0.250 & 0.750 & 6 & 0.750 \\
+AZAL & 1.000 & 12 & 1.000 &  & 0 &  \\
+\bottomrule
+\end{tabular}
+\end{table*}
