@@ -105,25 +105,25 @@ For Chomp, the oracle wrappers use `grundy.cpp` through a native library:
 g++ -O3 -std=c++17 -shared -fPIC grundy.cpp -o libgrundy.so
 ```
 
-For Connect Four, each Connect Four directory includes `connect4-master/` with the solver source, a `c4solver` binary, and `7x6.book`. The current `src/config.py` files still point `solver_path` at an older absolute path under `/Users/brentkong/Documents/AlphaZero-Chomp/connect4-master`; update that value to the local solver directory if the old path is not present.
+For Connect Four, each Connect Four directory includes `connect4-master/` with the solver source, a `c4solver` binary, and `7x6.book`. The current `src/config.py` files still point `solver_path` at an older absolute path under `/path/to/local/connect4-master`; update that value to the local solver directory if the old path is not present.
 
 Example local values:
 
 ```python
-'solver_path': '/Users/brentkong/Desktop/AlphaZero-Fresh/ConnectFour-Vanilla/connect4-master'
+'solver_path': '/path/to/repository/ConnectFour-Vanilla/connect4-master'
 ```
 
 or:
 
 ```python
-'solver_path': '/Users/brentkong/Desktop/AlphaZero-Fresh/ConnectFour-Auxiliary/connect4-master'
+'solver_path': '/path/to/repository/ConnectFour-Auxiliary/connect4-master'
 ```
 
 ## Evaluation Scripts
 
 The `src/play.py` scripts load a saved checkpoint, run AlphaZero-vs-AlphaZero, AlphaZero-vs-player, or AlphaZero-vs-oracle style rollouts depending on the `mode` variable, and write trace JSON/PNG outputs.
 
-Current caveat: several `play.py` files contain hardcoded checkpoint and output paths under `/Users/brentkong/Documents/AlphaZero-Chomp/...`. Update those paths before using the scripts from this `AlphaZero-Fresh` checkout.
+Current caveat: several `play.py` files contain hardcoded checkpoint and output paths under `/path/to/local/AlphaZero-Chomp/...`. Update those paths before using the scripts from this `AlphaZero-Fresh` checkout.
 
 Trace JSONs use:
 
@@ -155,7 +155,7 @@ python generate_trace_graphs.py --config config/chomp_9x10_config.json --outdir 
 python generate_trace_tables.py --config config/chomp_9x10_config.json --outdir figures/tables
 ```
 
-The checked-in config JSON files currently reference older absolute trace paths under `/Users/brentkong/Documents/AlphaZero-Chomp/...`. To rerun them from this checkout alone, point the `traces` entries at the local files under `Graph Creation/games/`.
+The checked-in config JSON files currently reference older absolute trace paths under `/path/to/local/AlphaZero-Chomp/...`. To rerun them from this checkout alone, point the `traces` entries at the local files under `Graph Creation/games/`.
 
 `graphs.py` and `history.py` also contain hardcoded local paths/W&B identifiers, so treat them as project scripts to edit for the run or machine you are using.
 
@@ -176,7 +176,7 @@ If you use this repository, please cite the associated paper:
 ```bibtex
 @article{alphazero_sparse_auxiliary,
   title={AlphaZero in Sparsely Rewarded Games: Limits and Auxiliary Supervision},
-  author={Brent Kong and Tony Yue Yu},
+  author={Anonymous Authors},
   journal={Preliminary work / under review},
   year={2026}
 }
