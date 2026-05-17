@@ -1,3 +1,5 @@
+from pathlib import Path
+
 args = {
         'row_count': 6,
         'column_count': 7,
@@ -19,5 +21,5 @@ args = {
         'dirichlet_alpha': 0.3,
         'log_freq': 100,
 
-        'solver_path': '/Users/brentkong/Documents/AlphaZero-Chomp/connect4-master',
+        'solver_path': str(Path(__file__).resolve().parents[1] / "connect4-master"),
     }

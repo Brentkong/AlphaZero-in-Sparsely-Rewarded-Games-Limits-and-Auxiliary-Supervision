@@ -35,6 +35,13 @@ def load_json(path: Path) -> Dict[str, Any]:
         return json.load(f)
 
 
+def resolve_trace_path(trace_path: str, config_dir: Path) -> Path:
+    path = Path(trace_path)
+    if path.is_absolute():
+        return path
+    return config_dir / path
+
+
 def infer_game(trace: Dict[str, Any]) -> str:
     if "grundy_numbers" in trace:
         return "chomp"
@@ -222,7 +229,9 @@ def main() -> None:
     if args.config is None:
         raise SystemExit("Please provide --config, or use --write-sample-config first.")
 
-    config = load_json(args.config)
+    config_path = args.config.resolve()
+    config_dir = config_path.parent
+    config = load_json(config_path)
     games = config.get("games", {})
     if not games:
         raise SystemExit("Config file must contain a top-level 'games' object.")
@@ -232,9 +241,10 @@ def main() -> None:
     if "chomp" in games:
         rows: List[Dict[str, Any]] = []
         for model, trace_path in games["chomp"].get("traces", {}).items():
-            trace = load_json(Path(trace_path))
+            trace_file = resolve_trace_path(trace_path, config_dir)
+            trace = load_json(trace_file)
             if infer_game(trace) != "chomp":
-                raise ValueError(f"Trace '{trace_path}' is not a Chomp trace.")
+                raise ValueError(f"Trace '{trace_file}' is not a Chomp trace.")
             rows.append(summarize_chomp_both_players(model, trace))
         if rows:
             df = pd.DataFrame(rows)
@@ -248,9 +258,10 @@ def main() -> None:
     if "connect4" in games:
         rows: List[Dict[str, Any]] = []
         for model, trace_path in games["connect4"].get("traces", {}).items():
-            trace = load_json(Path(trace_path))
+            trace_file = resolve_trace_path(trace_path, config_dir)
+            trace = load_json(trace_file)
             if infer_game(trace) != "connect4":
-                raise ValueError(f"Trace '{trace_path}' is not a Connect Four trace.")
+                raise ValueError(f"Trace '{trace_file}' is not a Connect Four trace.")
             rows.append(summarize_connect4_both_players(model, trace))
         if rows:
             df = pd.DataFrame(rows)

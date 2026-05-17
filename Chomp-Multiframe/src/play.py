@@ -1,5 +1,7 @@
 import time
 import json
+from pathlib import Path
+
 import torch
 import numpy as np
 from config import args
@@ -10,6 +12,9 @@ import matplotlib.pyplot as plt
 from grundy_oracle import grundy, fits_grundy_limit, find_best_moves
 torch.manual_seed(0)
 
+BASE_DIR = Path.home() / "Documents" / "AlphaZero-Chomp"
+FIGURES_DIR = BASE_DIR / "figures"
+
 rows, cols = args['rows'], args['cols']
 chomp = Chomp(rows, cols)
 player = 1
@@ -19,7 +24,7 @@ state = chomp.get_initial_state()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model = ResNet(chomp, args['num_resBlocks'], args['num_hidden'], device) 
-model.load_state_dict(torch.load("/Users/brentkong/Documents/AlphaZero-Chomp/weights/Chomp/Upgrade/10x11/model_9_Chomp(10x11) (1).pt", map_location=device))
+model.load_state_dict(torch.load(BASE_DIR / "weights" / "Chomp" / "Upgrade" / "10x11" / "model_9_Chomp(10x11) (1).pt", map_location=device))
 model.eval()
 mcts = MCTS(chomp, args, model)
 
@@ -100,7 +105,7 @@ data = {
     "best_moves": best_moves
 }
 
-with open(f"/Users/brentkong/Documents/AlphaZero-Chomp/figures/game_trace_{rows*cols}_{mode}.json", "w") as f:
+with open(FIGURES_DIR / f"game_trace_{rows*cols}_{mode}.json", "w") as f:
     json.dump(data, f, indent=2)
 
 
@@ -116,5 +121,5 @@ plt.xlabel("Move Number")
 plt.ylabel("Grundy Number")
 plt.title("Grundy Number vs. Move Number")
 plt.grid(True)
-plt.savefig(f'/Users/brentkong/Documents/AlphaZero-Chomp/figures/grundy_{rows*cols}_{mode}.png', dpi=300, bbox_inches='tight')
+plt.savefig(FIGURES_DIR / f"grundy_{rows*cols}_{mode}.png", dpi=300, bbox_inches='tight')
 plt.show()

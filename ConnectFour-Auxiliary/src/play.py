@@ -1,4 +1,6 @@
 import json
+from pathlib import Path
+
 import torch
 import numpy as np
 from mcts import MCTS
@@ -9,6 +11,9 @@ import matplotlib.pyplot as plt
 from connect_four import ConnectFour
 torch.manual_seed(10)
 
+BASE_DIR = Path.home() / "Documents" / "AlphaZero-Chomp"
+FIGURES_DIR = BASE_DIR / "figures"
+
 game = ConnectFour()
 player = 1
 mode = "avo"
@@ -16,7 +21,7 @@ mode = "avo"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model = ResNet(game, 9, 128, device)
-model.load_state_dict(torch.load("/Users/brentkong/Documents/AlphaZero-Chomp/weights/Connect_Four/Auxiliary/model_19_ConnectFour.pt", map_location=device))
+model.load_state_dict(torch.load(BASE_DIR / "weights" / "Connect_Four" / "Auxiliary" / "model_19_ConnectFour.pt", map_location=device))
 model.eval()
 mcts = MCTS(game, args, model)
 state = game.get_initial_state()
@@ -97,7 +102,7 @@ data = {
     "best_moves": best_moves
 }
 
-with open(f"/Users/brentkong/Documents/AlphaZero-Chomp/figures/game_trace_{args['row_count']*args['column_count']}_{mode}.json", "w") as f:
+with open(FIGURES_DIR / f"game_trace_{args['row_count']*args['column_count']}_{mode}.json", "w") as f:
     json.dump(data, f, indent=2)
 
 
@@ -113,5 +118,5 @@ plt.xlabel("Move Number")
 plt.ylabel("Score")
 plt.title("Score vs. Move Number")
 plt.grid(True)
-plt.savefig(f'/Users/brentkong/Documents/AlphaZero-Chomp/figures/score_{args['row_count']*args['column_count']}_{mode}.png', dpi=300, bbox_inches='tight')
+plt.savefig(FIGURES_DIR / f"score_{args['row_count']*args['column_count']}_{mode}.png", dpi=300, bbox_inches='tight')
 plt.show()

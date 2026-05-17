@@ -105,12 +105,12 @@ For Chomp, the oracle wrappers use `grundy.cpp` through a native library:
 g++ -O3 -std=c++17 -shared -fPIC grundy.cpp -o libgrundy.so
 ```
 
-For Connect Four, each Connect Four directory includes `connect4-master/` with the solver source, a `c4solver` binary, and `7x6.book`. The current `src/config.py` files still point `solver_path` at an older absolute path under `/path/to/local/connect4-master`; update that value to the local solver directory if the old path is not present.
+For Connect Four, each Connect Four directory includes `connect4-master/` with the solver source, a `c4solver` binary, and `7x6.book`. The current `src/config.py` files resolve `solver_path` relative to the local variant directory.
 
 Example local values:
 
 ```python
-'solver_path': '/path/to/repository/ConnectFour-Vanilla/connect4-master'
+'solver_path': str(Path(__file__).resolve().parents[1] / "connect4-master")
 ```
 
 or:
@@ -123,7 +123,13 @@ or:
 
 The `src/play.py` scripts load a saved checkpoint, run AlphaZero-vs-AlphaZero, AlphaZero-vs-player, or AlphaZero-vs-oracle style rollouts depending on the `mode` variable, and write trace JSON/PNG outputs.
 
-Current caveat: several `play.py` files contain hardcoded checkpoint and output paths under `/path/to/local/AlphaZero-Chomp/...`. Update those paths before using the scripts from this `AlphaZero-Fresh` checkout.
+The checkpoint and output paths are built with `pathlib.Path` from:
+
+```python
+Path.home() / "Documents" / "AlphaZero-Chomp"
+```
+
+If your checkpoints live somewhere else, update `BASE_DIR` in the relevant `src/play.py`.
 
 Trace JSONs use:
 
@@ -155,9 +161,13 @@ python generate_trace_graphs.py --config config/chomp_9x10_config.json --outdir 
 python generate_trace_tables.py --config config/chomp_9x10_config.json --outdir figures/tables
 ```
 
-The checked-in config JSON files currently reference older absolute trace paths under `/path/to/local/AlphaZero-Chomp/...`. To rerun them from this checkout alone, point the `traces` entries at the local files under `Graph Creation/games/`.
+The checked-in config JSON files use paths relative to the config file, pointing at the checked-in trace files under `Graph Creation/games/`.
 
-`graphs.py` and `history.py` also contain hardcoded local paths/W&B identifiers, so treat them as project scripts to edit for the run or machine you are using.
+`graphs.py` and `history.py` build local output paths with `pathlib.Path`. Before running `history.py`, set your W&B entity:
+
+```bash
+export WANDB_ENTITY="your-wandb-entity"
+```
 
 ## Generated Results Currently Checked In
 

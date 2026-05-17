@@ -1,11 +1,13 @@
-import os
+from pathlib import Path
+
 import pandas as pd
 import matplotlib.pyplot as plt
 
-csv_dir = "/Users/brentkong/Documents/AlphaZero-Chomp/history"
-out_dir = "/Users/brentkong/Documents/AlphaZero-Chomp/figures"
+BASE_DIR = Path.home() / "Documents" / "AlphaZero-Chomp"
+csv_dir = BASE_DIR / "history"
+out_dir = BASE_DIR / "figures"
 
-os.makedirs(out_dir, exist_ok=True)
+out_dir.mkdir(parents=True, exist_ok=True)
 
 LOSS_COLS = ["total_loss", "value_loss", "policy_loss"]
 P_LOSS_COLS = ["p_move_loss"]
@@ -20,28 +22,29 @@ def maybe_smooth(series, window):
     return series.rolling(window=window, min_periods=1).mean()
 
 def load_run(path):
+    path = Path(path)
     df = pd.read_csv(path)
     if XCOL not in df.columns:
-        raise ValueError(f"{os.path.basename(path)} missing {XCOL}")
+        raise ValueError(f"{path.name} missing {XCOL}")
     for c in LOSS_COLS:
         if c not in df.columns:
-            raise ValueError(f"{os.path.basename(path)} missing {c}")
+            raise ValueError(f"{path.name} missing {c}")
     df = df.sort_values(XCOL).dropna(subset=[XCOL])
     return df
 
 runs = {
-    "9x9 Vanilla":    os.path.join(csv_dir, "run_history_9x9_Working.csv"),
-    "9x10 Vanilla":   os.path.join(csv_dir, "run_history_9x10_Working.csv"),
-    "9x10 Multi-Frame":   os.path.join(csv_dir, "run_history_9x10_Upgrade.csv"),
-    "9x10 Auxiliary-Loss":   os.path.join(csv_dir, "run_history_9x10_Auxiliary.csv"),
+    "9x9 Vanilla":    csv_dir / "run_history_9x9_Working.csv",
+    "9x10 Vanilla":   csv_dir / "run_history_9x10_Working.csv",
+    "9x10 Multi-Frame":   csv_dir / "run_history_9x10_Upgrade.csv",
+    "9x10 Auxiliary-Loss":   csv_dir / "run_history_9x10_Auxiliary.csv",
 
-    "10x10 Vanilla":  os.path.join(csv_dir, "run_history_10x10_Working.csv"),
-    "10x11 Vanilla":  os.path.join(csv_dir, "run_history_10x11_Working.csv"),
-    "10x11 Multi-Frame":  os.path.join(csv_dir, "run_history_10x11_Upgrade.csv"),
-    "10x11 Auxiliary-Loss":   os.path.join(csv_dir, "run_history_10x11_Auxiliary.csv"),
+    "10x10 Vanilla":  csv_dir / "run_history_10x10_Working.csv",
+    "10x11 Vanilla":  csv_dir / "run_history_10x11_Working.csv",
+    "10x11 Multi-Frame":  csv_dir / "run_history_10x11_Upgrade.csv",
+    "10x11 Auxiliary-Loss":   csv_dir / "run_history_10x11_Auxiliary.csv",
 
-    "Connect Four Vanilla": os.path.join(csv_dir, "run_history_6x7_C4_Working.csv"),
-    "Connect Four Auxiliary": os.path.join(csv_dir, "run_history_6x7_C4_Auxiliary.csv")
+    "Connect Four Vanilla": csv_dir / "run_history_6x7_C4_Working.csv",
+    "Connect Four Auxiliary": csv_dir / "run_history_6x7_C4_Auxiliary.csv"
 }
 
 groups = {
@@ -86,7 +89,7 @@ def plot_group(group_name, labels, loss_cols):
 
         plt.legend()
 
-        out_path = os.path.join(out_dir, f"{group_name}__{loss_col}_vs_step.png")
+        out_path = out_dir / f"{group_name}__{loss_col}_vs_step.png"
         plt.savefig(out_path, dpi=200)
         plt.close()
 

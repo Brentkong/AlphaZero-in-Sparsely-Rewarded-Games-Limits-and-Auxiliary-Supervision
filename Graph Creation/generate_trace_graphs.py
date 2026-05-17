@@ -41,6 +41,13 @@ def load_json(path: Path) -> Dict[str, Any]:
         return json.load(f)
 
 
+def resolve_trace_path(trace_path: str, config_dir: Path) -> Path:
+    path = Path(trace_path)
+    if path.is_absolute():
+        return path
+    return config_dir / path
+
+
 def infer_game(trace: Dict[str, Any]) -> str:
     if "grundy_numbers" in trace:
         return "chomp"
@@ -75,7 +82,7 @@ def sanitized_name(text: str) -> str:
     return "".join(ch.lower() if ch.isalnum() else "_" for ch in text).strip("_")
 
 
-def plot_game(game_name: str, spec: Dict[str, Any], outdir: Path) -> Path:
+def plot_game(game_name: str, spec: Dict[str, Any], outdir: Path, config_dir: Path) -> Path:
     traces = spec.get("traces", {})
     if not traces:
         raise ValueError(f"No traces provided for game '{game_name}'.")
@@ -102,11 +109,12 @@ def plot_game(game_name: str, spec: Dict[str, Any], outdir: Path) -> Path:
     model_names = [name for name, _ in model_items]
 
     for row_idx, ((model_name, trace_path), ax_top) in enumerate(zip(model_items, top_axes)):
-        trace = load_json(Path(trace_path))
+        trace_file = resolve_trace_path(trace_path, config_dir)
+        trace = load_json(trace_file)
         inferred_game = infer_game(trace)
         if inferred_game != game_name:
             raise ValueError(
-                f"Trace '{trace_path}' looks like '{inferred_game}', not '{game_name}'."
+                f"Trace '{trace_file}' looks like '{inferred_game}', not '{game_name}'."
             )
 
         y = oracle_series(trace)
@@ -243,7 +251,9 @@ def main() -> None:
     if args.config is None:
         raise SystemExit("Please provide --config, or use --write-sample-config first.")
 
-    config = load_json(args.config)
+    config_path = args.config.resolve()
+    config_dir = config_path.parent
+    config = load_json(config_path)
     games = config.get("games", {})
     if not games:
         raise SystemExit("Config file must contain a top-level 'games' object.")
@@ -254,7 +264,7 @@ def main() -> None:
     for game_name in ("chomp", "connect4"):
         if game_name not in games:
             continue
-        outpath = plot_game(game_name, games[game_name], args.outdir)
+        outpath = plot_game(game_name, games[game_name], args.outdir, config_dir)
         generated_paths.append(outpath)
 
     if not generated_paths:
