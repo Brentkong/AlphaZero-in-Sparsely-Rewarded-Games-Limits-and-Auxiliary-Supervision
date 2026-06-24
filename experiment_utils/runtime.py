@@ -60,6 +60,8 @@ def apply_cli_overrides(config: Dict[str, Any], cli: argparse.Namespace) -> None
 
 
 def board_label(config: Dict[str, Any]) -> str:
+    if "board" in config:
+        return str(config["board"])
     if "rows" in config and "cols" in config:
         return f"{config['rows']}x{config['cols']}"
     return f"{config['row_count']}x{config['column_count']}"
@@ -74,6 +76,22 @@ def run_dir(
     return (
         base
         / str(config.get("game_name", "game"))
+        / str(config.get("variant", "variant"))
+        / board_label(config)
+        / f"seed_{int(config.get('seed', 0))}"
+    )
+
+
+def evaluation_dir(
+    repo_root: Path,
+    config: Dict[str, Any],
+    kind: str,
+    outdir: Optional[Path] = None,
+) -> Path:
+    base = Path(outdir) if outdir is not None else repo_root / "results" / "evaluations" / kind
+    return (
+        base
+        / str(config.get("game_name", config.get("game", "game")))
         / str(config.get("variant", "variant"))
         / board_label(config)
         / f"seed_{int(config.get('seed', 0))}"

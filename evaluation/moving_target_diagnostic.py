@@ -21,7 +21,7 @@ from evaluation.common import (
     load_experiment,
 )
 from evaluation.sampled_state_eval import choose_action
-from experiment_utils.runtime import metadata
+from experiment_utils.runtime import evaluation_dir, metadata
 
 
 def class_from_value(value: Optional[float]) -> str:
@@ -200,7 +200,7 @@ def main() -> None:
     parser.add_argument("--game", choices=("chomp", "connect4"), required=True)
     parser.add_argument("--src-dir", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
-    parser.add_argument("--outdir", type=Path, default=REPO_ROOT / "results" / "diagnostics")
+    parser.add_argument("--outdir", type=Path, default=None)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--rows", type=int, default=None)
     parser.add_argument("--cols", type=int, default=None)
@@ -212,6 +212,7 @@ def main() -> None:
 
     result = eval_chomp(args) if args.game == "chomp" else eval_connect4(args)
 
+    args.outdir = evaluation_dir(REPO_ROOT, result["metadata"], "diagnostics", args.outdir)
     args.outdir.mkdir(parents=True, exist_ok=True)
     stem = f"{args.game}_moving_target_seed_{args.seed}"
     with (args.outdir / f"{stem}.json").open("w", encoding="utf-8") as f:

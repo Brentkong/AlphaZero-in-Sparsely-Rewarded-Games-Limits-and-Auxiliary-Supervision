@@ -55,13 +55,20 @@ def main() -> None:
     parser.add_argument("--num-searches", type=int, default=None)
     parser.add_argument("--wandb-mode", choices=("online", "offline", "disabled"), default="disabled")
     parser.add_argument("--eval-mode", choices=("ava", "avp", "avo"), default="ava")
+    parser.add_argument("--sampled-states", action="store_true")
+    parser.add_argument("--moving-target", action="store_true")
+    parser.add_argument("--samples", type=int, default=32)
+    parser.add_argument("--depths", nargs="+", default=["0", "4", "8", "12"])
+    parser.add_argument("--diagnostic-episodes", type=int, default=8)
     parser.add_argument("--skip-training", action="store_true")
     parser.add_argument("--skip-eval", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
+    args.outdir = args.outdir.resolve()
 
     seeds = parse_int_list(args.seeds)
     traces: List[Path] = []
+    sampled_results: List[Path] = []
 
     for exp_name in args.experiments:
         exp = EXPERIMENTS[exp_name]
@@ -104,6 +111,68 @@ def main() -> None:
                 )
                 traces.extend(run_path.glob(f"game_trace_*_{args.eval_mode}.json"))
 
+            if args.sampled_states or args.moving_target:
+                checkpoint = latest_checkpoint(run_path) if not args.dry_run else run_path / "model_LAST.pt"
+                game = str(exp["game"])
+                eval_common = [
+                    "--game",
+                    game,
+                    "--src-dir",
+                    str(src_dir),
+                    "--checkpoint",
+                    str(checkpoint),
+                    "--seed",
+                    str(seed),
+                ]
+                if args.num_searches is not None:
+                    eval_common += ["--num-searches", str(args.num_searches)]
+                if game == "chomp":
+                    eval_common += ["--rows", str(exp["rows"]), "--cols", str(exp["cols"])]
+
+                if args.sampled_states:
+                    run(
+                        [
+                            args.python,
+                            str(REPO_ROOT / "evaluation" / "sampled_state_eval.py"),
+                            *eval_common,
+                            "--outdir",
+                            str(args.outdir / "evaluations" / "sampled"),
+                            "--samples",
+                            str(args.samples),
+                            "--depths",
+                            *args.depths,
+                        ],
+                        src_dir,
+                        args.dry_run,
+                    )
+                    if not args.dry_run:
+                        pattern = (
+                            args.outdir
+                            / "evaluations"
+                            / "sampled"
+                            / ("Chomp" if game == "chomp" else "Connect Four")
+                            / str(exp["variant"])
+                            / board_label(exp)
+                            / f"seed_{seed}"
+                            / f"{game}_sampled_seed_{seed}.json"
+                        )
+                        sampled_results.append(pattern)
+
+                if args.moving_target:
+                    run(
+                        [
+                            args.python,
+                            str(REPO_ROOT / "evaluation" / "moving_target_diagnostic.py"),
+                            *eval_common,
+                            "--outdir",
+                            str(args.outdir / "evaluations" / "diagnostics"),
+                            "--episodes",
+                            str(args.diagnostic_episodes),
+                        ],
+                        src_dir,
+                        args.dry_run,
+                    )
+
     if traces:
         run(
             [
@@ -113,6 +182,20 @@ def main() -> None:
                 str(args.outdir / "summary"),
                 "--inputs",
                 *[str(path) for path in traces],
+            ],
+            REPO_ROOT,
+            args.dry_run,
+        )
+
+    if sampled_results:
+        run(
+            [
+                args.python,
+                str(REPO_ROOT / "evaluation" / "aggregate_traces.py"),
+                "--outdir",
+                str(args.outdir / "summary" / "sampled"),
+                "--inputs",
+                *[str(path) for path in sampled_results],
             ],
             REPO_ROOT,
             args.dry_run,

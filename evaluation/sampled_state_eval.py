@@ -20,7 +20,7 @@ from evaluation.common import (
     connect4_oracle,
     load_experiment,
 )
-from experiment_utils.runtime import metadata, parse_int_list
+from experiment_utils.runtime import evaluation_dir, metadata, parse_int_list
 
 
 def valid_actions(game: Any, state: np.ndarray) -> np.ndarray:
@@ -250,7 +250,7 @@ def main() -> None:
     parser.add_argument("--game", choices=("chomp", "connect4"), required=True)
     parser.add_argument("--src-dir", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
-    parser.add_argument("--outdir", type=Path, default=REPO_ROOT / "results" / "sampled")
+    parser.add_argument("--outdir", type=Path, default=None)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--rows", type=int, default=None)
     parser.add_argument("--cols", type=int, default=None)
@@ -264,6 +264,7 @@ def main() -> None:
 
     result = eval_chomp(args) if args.game == "chomp" else eval_connect4(args)
 
+    args.outdir = evaluation_dir(REPO_ROOT, result["metadata"], "sampled", args.outdir)
     args.outdir.mkdir(parents=True, exist_ok=True)
     stem = f"{args.game}_sampled_seed_{args.seed}"
     with (args.outdir / f"{stem}.json").open("w", encoding="utf-8") as f:

@@ -176,6 +176,7 @@ Additional reviewer-support utilities live in `evaluation/`:
 
 ```bash
 python evaluation/run_multiseed.py --seeds 0 1 2 --wandb-mode disabled
+python evaluation/run_multiseed.py --seeds 0 1 2 --sampled-states --moving-target --wandb-mode disabled
 python evaluation/sampled_state_eval.py --game chomp --src-dir Chomp-Vanilla/src --checkpoint path/to/model.pt --rows 9 --cols 10
 python evaluation/moving_target_diagnostic.py --game connect4 --src-dir ConnectFour-Vanilla/src --checkpoint path/to/model.pt
 python evaluation/export_hyperparameters.py --seed-count 3
