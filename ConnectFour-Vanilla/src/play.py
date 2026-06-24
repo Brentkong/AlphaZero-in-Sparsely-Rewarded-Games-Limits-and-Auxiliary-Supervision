@@ -25,6 +25,7 @@ cli, OUTPUT_DIR, checkpoint = prepare_play_run(_REPO_ROOT, args)
 game = ConnectFour()
 player = 1
 mode = cli.eval_mode
+trace_suffix = "" if cli.trace_index is None else f"_trace_{cli.trace_index:03d}"
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -105,13 +106,19 @@ print(f"Best moves: {best_moves}")
 
 
 data = {
-    "metadata": metadata(args, checkpoint, mode=mode),
+    "metadata": metadata(
+        args,
+        checkpoint,
+        mode=mode,
+        trace_index=cli.trace_index,
+        eval_seed=cli.eval_seed,
+    ),
     "move_sequence": move_sequence,
     "score_state": score_state,
     "best_moves": best_moves
 }
 
-with open(OUTPUT_DIR / f"game_trace_{args['row_count']*args['column_count']}_{mode}.json", "w") as f:
+with open(OUTPUT_DIR / f"game_trace_{args['row_count']*args['column_count']}_{mode}{trace_suffix}.json", "w") as f:
     json.dump(data, f, indent=2)
 
 
@@ -127,6 +134,6 @@ plt.xlabel("Move Number")
 plt.ylabel("Score")
 plt.title("Score vs. Move Number")
 plt.grid(True)
-plt.savefig(OUTPUT_DIR / f"score_{args['row_count']*args['column_count']}_{mode}.png", dpi=300, bbox_inches='tight')
+plt.savefig(OUTPUT_DIR / f"score_{args['row_count']*args['column_count']}_{mode}{trace_suffix}.png", dpi=300, bbox_inches='tight')
 if cli.show_plot:
     plt.show()

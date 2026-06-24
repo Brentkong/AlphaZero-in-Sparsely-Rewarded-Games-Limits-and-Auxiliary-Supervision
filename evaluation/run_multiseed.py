@@ -25,6 +25,17 @@ def result_dir(base: Path, exp: Dict[str, object], seed: int) -> Path:
     return base / game / str(exp["variant"]) / board_label(exp) / f"seed_{seed}"
 
 
+def trace_path(
+    base: Path,
+    exp: Dict[str, object],
+    seed: int,
+    eval_mode: str,
+    trace_index: int,
+) -> Path:
+    cells = int(exp["rows"]) * int(exp["cols"]) if exp["game"] == "chomp" else 42
+    return result_dir(base, exp, seed) / f"game_trace_{cells}_{eval_mode}_trace_{trace_index:03d}.json"
+
+
 def latest_checkpoint(path: Path) -> Path:
     candidates = sorted(path.glob("model_*.pt"), key=lambda p: p.stat().st_mtime)
     if not candidates:
@@ -43,7 +54,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Run configured experiment variants across multiple seeds."
     )
-    parser.add_argument("--seeds", nargs="+", default=["0"])
+    parser.add_argument("--seeds", nargs="+", default=["0", "1", "2"])
     parser.add_argument(
         "--experiments",
         nargs="+",
@@ -55,6 +66,7 @@ def main() -> None:
     parser.add_argument("--num-searches", type=int, default=None)
     parser.add_argument("--wandb-mode", choices=("online", "offline", "disabled"), default="disabled")
     parser.add_argument("--eval-mode", choices=("ava", "avp", "avo"), default="ava")
+    parser.add_argument("--trace-games", type=int, default=20)
     parser.add_argument("--sampled-states", action="store_true")
     parser.add_argument("--moving-target", action="store_true")
     parser.add_argument("--samples", type=int, default=32)
@@ -65,6 +77,8 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
     args.outdir = args.outdir.resolve()
+    if args.trace_games < 0:
+        raise ValueError("--trace-games must be non-negative")
 
     seeds = parse_int_list(args.seeds)
     traces: List[Path] = []
@@ -96,20 +110,23 @@ def main() -> None:
             run_path = result_dir(args.outdir, exp, seed)
             if not args.skip_eval:
                 checkpoint = latest_checkpoint(run_path) if not args.dry_run else run_path / "model_LAST.pt"
-                run(
-                    [
-                        args.python,
-                        "play.py",
-                        *common,
-                        "--checkpoint",
-                        str(checkpoint),
-                        "--eval-mode",
-                        args.eval_mode,
-                    ],
-                    src_dir,
-                    args.dry_run,
-                )
-                traces.extend(run_path.glob(f"game_trace_*_{args.eval_mode}.json"))
+                for trace_index in range(args.trace_games):
+                    run(
+                        [
+                            args.python,
+                            "play.py",
+                            *common,
+                            "--checkpoint",
+                            str(checkpoint),
+                            "--eval-mode",
+                            args.eval_mode,
+                            "--trace-index",
+                            str(trace_index),
+                        ],
+                        src_dir,
+                        args.dry_run,
+                    )
+                    traces.append(trace_path(args.outdir, exp, seed, args.eval_mode, trace_index))
 
             if args.sampled_states or args.moving_target:
                 checkpoint = latest_checkpoint(run_path) if not args.dry_run else run_path / "model_LAST.pt"

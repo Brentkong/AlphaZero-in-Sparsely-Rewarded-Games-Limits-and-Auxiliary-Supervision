@@ -46,6 +46,7 @@ def add_play_cli(parser: argparse.ArgumentParser, config: Dict[str, Any]) -> Non
     parser.add_argument("--outdir", type=Path, default=None)
     parser.add_argument("--num-searches", type=int, default=config.get("num_searches"))
     parser.add_argument("--eval-mode", choices=("ava", "avp", "avo"), default="avo")
+    parser.add_argument("--trace-index", type=int, default=None)
 
 
 def apply_cli_overrides(config: Dict[str, Any], cli: argparse.Namespace) -> None:
@@ -143,7 +144,10 @@ def prepare_play_run(
     parser.add_argument("--show-plot", action="store_true")
     cli = parser.parse_args()
     apply_cli_overrides(config, cli)
-    seed_everything(config["seed"])
+    cli.eval_seed = int(config["seed"])
+    if cli.trace_index is not None:
+        cli.eval_seed = int(config["seed"]) * 100000 + int(cli.trace_index)
+    seed_everything(cli.eval_seed)
     output_dir = run_dir(repo_root, config, cli.outdir)
     output_dir.mkdir(parents=True, exist_ok=True)
     snapshot_config(config, output_dir)

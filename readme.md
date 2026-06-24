@@ -175,13 +175,18 @@ python generate_trace_tables.py --config config/chomp_9x10_config.json --outdir 
 Additional reviewer-support utilities live in `evaluation/`:
 
 ```bash
-python evaluation/run_multiseed.py --seeds 0 1 2 --wandb-mode disabled
-python evaluation/run_multiseed.py --seeds 0 1 2 --sampled-states --moving-target --wandb-mode disabled
+python evaluation/run_multiseed.py --wandb-mode disabled
+python evaluation/run_multiseed.py --sampled-states --moving-target --wandb-mode disabled
 python evaluation/sampled_state_eval.py --game chomp --src-dir Chomp-Vanilla/src --checkpoint path/to/model.pt --rows 9 --cols 10
 python evaluation/moving_target_diagnostic.py --game connect4 --src-dir ConnectFour-Vanilla/src --checkpoint path/to/model.pt
 python evaluation/export_hyperparameters.py --seed-count 3
 python evaluation/aggregate_traces.py --inputs results/**/game_trace_*_ava.json --outdir results/summary
 ```
+
+`run_multiseed.py` defaults to seeds `0 1 2` and `20` trace games per
+checkpoint. With `--sampled-states`, it samples `32` states at each requested
+depth (`0 4 8 12` by default). With `--moving-target`, it runs `8` self-play
+diagnostic games per checkpoint.
 
 The checked-in config JSON files use paths relative to the config file, pointing at the checked-in trace files under `Graph Creation/games/`.
 

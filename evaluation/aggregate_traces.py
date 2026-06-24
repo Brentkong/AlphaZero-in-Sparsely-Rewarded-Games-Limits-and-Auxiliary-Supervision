@@ -14,6 +14,13 @@ if str(_REPO_ROOT) not in sys.path:
 
 from experiment_utils.runtime import mean_std
 
+METRIC_FIELDS = [
+    "oracle_match_rate",
+    "longest_oracle_chain",
+    "first_non_oracle_ply",
+    "sampled_state_match_rate",
+]
+
 
 def load_json(path: Path) -> Dict[str, Any]:
     with path.open("r", encoding="utf-8") as f:
@@ -92,6 +99,8 @@ def summarize_trace(path: Path) -> Dict[str, Any]:
         "variant": meta.get("variant"),
         "board": meta.get("board"),
         "seed": meta.get("seed", ""),
+        "checkpoint": meta.get("checkpoint", ""),
+        "n_inputs": 1,
         "oracle_match_rate": rate(flags),
         "longest_oracle_chain": longest_true_run(flags),
         "first_non_oracle_ply": failure if failure is not None else math.nan,
@@ -110,6 +119,8 @@ def summarize_sample(path: Path) -> Dict[str, Any]:
         "variant": meta.get("variant", ""),
         "board": meta.get("board", ""),
         "seed": meta.get("seed", ""),
+        "checkpoint": meta.get("checkpoint", ""),
+        "n_inputs": 1,
         "oracle_match_rate": math.nan,
         "longest_oracle_chain": summary.get("mean_chain_length", math.nan),
         "first_non_oracle_ply": summary.get("mean_failure_depth", math.nan),
@@ -119,6 +130,31 @@ def summarize_sample(path: Path) -> Dict[str, Any]:
 
 def group_key(row: Dict[str, Any]) -> tuple[Any, ...]:
     return row["game"], row["variant"], row["board"], row["kind"]
+
+
+def seed_key(row: Dict[str, Any]) -> tuple[Any, ...]:
+    return row["game"], row["variant"], row["board"], row["kind"], row["seed"], row["checkpoint"]
+
+
+def metric_mean(values: List[float]) -> float:
+    mean, _, n = mean_std(values)
+    return mean if n else math.nan
+
+
+def collapse_seed_rows(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+    row = {
+        "source": ";".join(str(r.get("source", "")) for r in rows),
+        "kind": rows[0]["kind"],
+        "game": rows[0]["game"],
+        "variant": rows[0]["variant"],
+        "board": rows[0]["board"],
+        "seed": rows[0]["seed"],
+        "checkpoint": rows[0]["checkpoint"],
+        "n_inputs": sum(int(r.get("n_inputs", 1)) for r in rows),
+    }
+    for field in METRIC_FIELDS:
+        row[field] = metric_mean([r[field] for r in rows])
+    return row
 
 
 def fmt(value: float) -> str:
@@ -140,6 +176,8 @@ def write_csv(path: Path, rows: List[Dict[str, Any]]) -> None:
         "variant",
         "board",
         "kind",
+        "seed",
+        "n_inputs",
         "oracle_match_rate",
         "longest_oracle_chain",
         "first_non_oracle_ply",
@@ -197,15 +235,20 @@ def main() -> None:
     parser.add_argument("--outdir", type=Path, default=Path("results/summary"))
     args = parser.parse_args()
 
-    per_seed: List[Dict[str, Any]] = []
+    input_rows: List[Dict[str, Any]] = []
     for path in args.inputs:
         data = load_json(path)
         if "move_sequence" in data and "best_moves" in data:
-            per_seed.append(summarize_trace(path))
+            input_rows.append(summarize_trace(path))
         elif "summary" in data:
-            per_seed.append(summarize_sample(path))
+            input_rows.append(summarize_sample(path))
         else:
             raise ValueError(f"Unsupported metrics file: {path}")
+
+    seed_groups: Dict[tuple[Any, ...], List[Dict[str, Any]]] = {}
+    for row in input_rows:
+        seed_groups.setdefault(seed_key(row), []).append(row)
+    per_seed = [collapse_seed_rows(rows) for _, rows in sorted(seed_groups.items())]
 
     grouped: Dict[tuple[Any, ...], List[Dict[str, Any]]] = {}
     for row in per_seed:
@@ -220,6 +263,8 @@ def main() -> None:
                 "variant": variant,
                 "board": board,
                 "kind": kind,
+                "seed": "",
+                "n_inputs": sum(int(r.get("n_inputs", 1)) for r in rows),
                 "oracle_match_rate": fmt_mean_std([r["oracle_match_rate"] for r in rows]),
                 "longest_oracle_chain": fmt_mean_std([r["longest_oracle_chain"] for r in rows]),
                 "first_non_oracle_ply": fmt_mean_std([r["first_non_oracle_ply"] for r in rows]),

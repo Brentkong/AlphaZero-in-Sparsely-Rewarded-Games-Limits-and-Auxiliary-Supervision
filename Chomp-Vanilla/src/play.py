@@ -27,6 +27,7 @@ rows, cols = args['rows'], args['cols']
 chomp = Chomp(rows, cols)
 player = 1
 mode = cli.eval_mode
+trace_suffix = "" if cli.trace_index is None else f"_trace_{cli.trace_index:03d}"
 
 state = chomp.get_initial_state()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -112,13 +113,19 @@ print(f"Elapsed time: {end - start:.2f} seconds")
 
 
 data = {
-    "metadata": metadata(args, checkpoint, mode=mode),
+    "metadata": metadata(
+        args,
+        checkpoint,
+        mode=mode,
+        trace_index=cli.trace_index,
+        eval_seed=cli.eval_seed,
+    ),
     "move_sequence": move_sequence,
     "grundy_numbers": grundy_numbers,
     "best_moves": best_moves
 }
 
-with open(OUTPUT_DIR / f"game_trace_{rows*cols}_{mode}.json", "w") as f:
+with open(OUTPUT_DIR / f"game_trace_{rows*cols}_{mode}{trace_suffix}.json", "w") as f:
     json.dump(data, f, indent=2)
 
 
@@ -134,6 +141,6 @@ plt.xlabel("Move Number")
 plt.ylabel("Grundy Number")
 plt.title("Grundy Number vs. Move Number")
 plt.grid(True)
-plt.savefig(OUTPUT_DIR / f"grundy_{rows*cols}_{mode}.png", dpi=300, bbox_inches='tight')
+plt.savefig(OUTPUT_DIR / f"grundy_{rows*cols}_{mode}{trace_suffix}.png", dpi=300, bbox_inches='tight')
 if cli.show_plot:
     plt.show()
