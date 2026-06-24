@@ -6,8 +6,6 @@ from tqdm import trange
 import random
 from mcts import MCTSParallel
 
-torch.manual_seed(0)
-
 
 class AlphaZeroParallel:
     def __init__(self, model, optimizer, game, args, oracle=None):

@@ -69,6 +69,12 @@ def safe_rate(numerator: int, denominator: int) -> float:
     return float(numerator) / float(denominator) if denominator else math.nan
 
 
+def format_count_rate(numerator: int, denominator: int) -> str:
+    if denominator == 0:
+        return "N/A"
+    return f"{safe_rate(numerator, denominator):.3f} ({numerator}/{denominator})"
+
+
 def longest_true_run(flags: List[Optional[bool]]) -> int:
     best = 0
     current = 0
@@ -80,18 +86,33 @@ def longest_true_run(flags: List[Optional[bool]]) -> int:
             current = 0
     return best
 
+
+def true_prefix_len(flags: List[Optional[bool]]) -> int:
+    prefix = 0
+    for flag in flags:
+        if flag is True:
+            prefix += 1
+        elif flag is False:
+            break
+    return prefix
+
+
 def first_false_ply(flags: List[Optional[bool]], player_index: int) -> Optional[int]:
     for idx, flag in enumerate(flags):
         if flag is False:
             return player_index + 2 * idx
     return None
 
+
+def format_optional_ply(ply: Optional[int]) -> Any:
+    return "N/A" if ply is None else ply
+
 def player_flags(flags: List[Optional[bool]], player_index: int) -> List[Optional[bool]]:
     # player_index = 0 for P1 (even plies), 1 for P2 (odd plies)
     return [flags[t] for t in range(player_index, len(flags), 2)]
 
 
-def chomp_preserve_rate(trace: Dict[str, Any], player_index: int) -> float:
+def chomp_preserve_counts(trace: Dict[str, Any], player_index: int) -> tuple[int, int]:
     g = trace["grundy_numbers"]
 
     winning_turns = 0
@@ -105,7 +126,7 @@ def chomp_preserve_rate(trace: Dict[str, Any], player_index: int) -> float:
             if g[t + 1] == 0:
                 preserved += 1
 
-    return safe_rate(preserved, winning_turns)
+    return preserved, winning_turns
 
 
 def summarize_player(flags: List[Optional[bool]]) -> Dict[str, Any]:
@@ -114,8 +135,9 @@ def summarize_player(flags: List[Optional[bool]]) -> Dict[str, Any]:
     labeled_count = len(labeled)
 
     return {
-        "Oracle-match rate": safe_rate(match_count, labeled_count),
+        "Oracle-match rate": format_count_rate(match_count, labeled_count),
         "Longest oracle-consistent chain": longest_true_run(flags),
+        "Oracle-consistent prefix": true_prefix_len(flags),
     }
 
 
@@ -127,15 +149,21 @@ def summarize_chomp_both_players(model: str, trace: Dict[str, Any]) -> Dict[str,
 
     p1 = summarize_player(p1_flags)
     p2 = summarize_player(p2_flags)
+    p1_preserved, p1_winning = chomp_preserve_counts(trace, 0)
+    p2_preserved, p2_winning = chomp_preserve_counts(trace, 1)
 
     return {
         "Model": model,
         "Oracle-match rate (P1)": p1["Oracle-match rate"],
         "Longest oracle-consistent chain (P1)": p1["Longest oracle-consistent chain"],
-        "Preserve-to-$g=0$ rate (P1)": chomp_preserve_rate(trace, 0),
+        "Oracle-consistent prefix (P1)": p1["Oracle-consistent prefix"],
+        "First non-oracle ply (P1)": format_optional_ply(first_false_ply(p1_flags, 0)),
+        "Preserve-to-$g=0$ rate (P1)": format_count_rate(p1_preserved, p1_winning),
         "Oracle-match rate (P2)": p2["Oracle-match rate"],
         "Longest oracle-consistent chain (P2)": p2["Longest oracle-consistent chain"],
-        "Preserve-to-$g=0$ rate (P2)": chomp_preserve_rate(trace, 1),
+        "Oracle-consistent prefix (P2)": p2["Oracle-consistent prefix"],
+        "First non-oracle ply (P2)": format_optional_ply(first_false_ply(p2_flags, 1)),
+        "Preserve-to-$g=0$ rate (P2)": format_count_rate(p2_preserved, p2_winning),
     }
 
 
@@ -152,10 +180,14 @@ def summarize_connect4_both_players(model: str, trace: Dict[str, Any]) -> Dict[s
         "Model": model,
         "Oracle-match rate (P1)": p1["Oracle-match rate"],
         "Longest oracle-consistent chain (P1)": p1["Longest oracle-consistent chain"],
-        "First non-oracle ply (P1)": first_false_ply(p1_flags, 0),
+        "Oracle-consistent prefix (P1)": p1["Oracle-consistent prefix"],
+        "First non-oracle ply (P1)": format_optional_ply(first_false_ply(p1_flags, 0)),
+        "Failure depth (P1)": format_optional_ply(first_false_ply(p1_flags, 0)),
         "Oracle-match rate (P2)": p2["Oracle-match rate"],
         "Longest oracle-consistent chain (P2)": p2["Longest oracle-consistent chain"],
-        "First non-oracle ply (P2)": first_false_ply(p2_flags, 1),
+        "Oracle-consistent prefix (P2)": p2["Oracle-consistent prefix"],
+        "First non-oracle ply (P2)": format_optional_ply(first_false_ply(p2_flags, 1)),
+        "Failure depth (P2)": format_optional_ply(first_false_ply(p2_flags, 1)),
     }
 
 
@@ -163,7 +195,8 @@ def format_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
     for col in out.columns:
         if pd.api.types.is_float_dtype(out[col]):
-            out[col] = out[col].map(lambda x: "" if pd.isna(x) else f"{x:.3f}")
+            out[col] = out[col].map(lambda x: "N/A" if pd.isna(x) else f"{x:.3f}")
+    out = out.fillna("N/A")
     return out
 
 
@@ -193,6 +226,16 @@ def write_latex_table(
 
     with path.open("w", encoding="utf-8") as f:
         f.write(latex)
+
+
+def output_table_path(game_name: str, config_path: Path, outdir: Path) -> Path:
+    if game_name == "chomp":
+        stem = config_path.stem
+        suffix = stem.removeprefix("chomp_").removesuffix("_config")
+        if suffix and suffix != stem:
+            return outdir / f"chomp_metrics_{suffix}.tex"
+        return outdir / "chomp_metrics.tex"
+    return outdir / f"{game_name}_metrics.tex"
 
 
 def main() -> None:
@@ -250,7 +293,7 @@ def main() -> None:
             df = pd.DataFrame(rows)
             write_latex_table(
                 df,
-                args.outdir / "chomp_metrics.tex",
+                output_table_path("chomp", config_path, args.outdir),
                 caption="Chomp trace-level metrics across model variants, reported separately for first-player and second-player turns.",
                 label="tab:chomp_trace_metrics",
             )
@@ -267,7 +310,7 @@ def main() -> None:
             df = pd.DataFrame(rows)
             write_latex_table(
                 df,
-                args.outdir / "connect4_metrics.tex",
+                output_table_path("connect4", config_path, args.outdir),
                 caption="Connect Four trace-level metrics across model variants, reported separately for first-player and second-player turns.",
                 label="tab:connect4_trace_metrics",
             )

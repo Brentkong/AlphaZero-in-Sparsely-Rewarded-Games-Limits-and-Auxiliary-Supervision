@@ -1,6 +1,10 @@
 from pathlib import Path
 
 args = {
+        'seed': 0,
+        'game_name': 'Connect Four',
+        'variant': 'AZAL',
+        'checkpoint_selection_rule': 'last iteration checkpoint',
         'row_count': 6,
         'column_count': 7,
         'num_resBlocks': 9, 

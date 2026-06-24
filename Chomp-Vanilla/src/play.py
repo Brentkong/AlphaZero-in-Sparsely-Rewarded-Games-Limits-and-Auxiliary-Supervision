@@ -1,5 +1,6 @@
 import time
 import json
+import sys
 from pathlib import Path
 
 import torch
@@ -10,21 +11,28 @@ from chomp import Chomp
 from resnet import ResNet
 import matplotlib.pyplot as plt
 from grundy_oracle import grundy, fits_grundy_limit, find_best_moves
-torch.manual_seed(0)
 
-BASE_DIR = Path.home() / "Documents" / "AlphaZero-Chomp"
-FIGURES_DIR = BASE_DIR / "figures"
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from experiment_utils.runtime import (
+    metadata,
+    prepare_play_run,
+)
+
+cli, OUTPUT_DIR, checkpoint = prepare_play_run(_REPO_ROOT, args)
 
 rows, cols = args['rows'], args['cols']
 chomp = Chomp(rows, cols)
 player = 1
-mode = "avo"
+mode = cli.eval_mode
 
 state = chomp.get_initial_state()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model = ResNet(chomp, args['num_resBlocks'], args['num_hidden'], device) 
-model.load_state_dict(torch.load(BASE_DIR / "weights" / "Chomp" / "Working" / "9x10" / "model_9_Chomp(9x10).pt", map_location=device))
+model.load_state_dict(torch.load(checkpoint, map_location=device))
 model.eval()
 mcts = MCTS(chomp, args, model)
 
@@ -40,6 +48,9 @@ while True:
         print(f"Grundy number: {grundy_number}") 
         grundy_numbers.append(grundy_number)
         best_moves.append([int(a) for a in best])
+    else:
+        grundy_numbers.append(None)
+        best_moves.append(None)
 
     if mode == "ava":
         if player == 1:
@@ -101,12 +112,13 @@ print(f"Elapsed time: {end - start:.2f} seconds")
 
 
 data = {
+    "metadata": metadata(args, checkpoint, mode=mode),
     "move_sequence": move_sequence,
     "grundy_numbers": grundy_numbers,
     "best_moves": best_moves
 }
 
-with open(FIGURES_DIR / f"game_trace_{rows*cols}_{mode}.json", "w") as f:
+with open(OUTPUT_DIR / f"game_trace_{rows*cols}_{mode}.json", "w") as f:
     json.dump(data, f, indent=2)
 
 
@@ -122,5 +134,6 @@ plt.xlabel("Move Number")
 plt.ylabel("Grundy Number")
 plt.title("Grundy Number vs. Move Number")
 plt.grid(True)
-plt.savefig(FIGURES_DIR / f"grundy_{rows*cols}_{mode}.png", dpi=300, bbox_inches='tight')
-plt.show()
+plt.savefig(OUTPUT_DIR / f"grundy_{rows*cols}_{mode}.png", dpi=300, bbox_inches='tight')
+if cli.show_plot:
+    plt.show()

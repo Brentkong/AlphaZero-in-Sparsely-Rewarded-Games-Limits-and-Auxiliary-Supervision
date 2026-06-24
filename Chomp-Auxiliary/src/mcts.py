@@ -1,7 +1,6 @@
 import numpy as np
 import math
 import torch
-torch.manual_seed(0)
 
 class Node:
     def __init__(self, game, args, state, parent=None, action_taken=None, prior=0, visit_count=0):

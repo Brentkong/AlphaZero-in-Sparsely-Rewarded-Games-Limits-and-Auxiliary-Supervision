@@ -1,4 +1,8 @@
 args = {
+        'seed': 0,
+        'game_name': 'Chomp',
+        'variant': 'Multi-Frame',
+        'checkpoint_selection_rule': 'last iteration checkpoint',
         'rows': 10,
         'cols': 11,
         'num_resBlocks': 9, 

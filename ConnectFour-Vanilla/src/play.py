@@ -1,4 +1,5 @@
 import json
+import sys
 from pathlib import Path
 
 import torch
@@ -9,19 +10,26 @@ from resnet import ResNet
 from connect4_oracle import *
 import matplotlib.pyplot as plt
 from connect_four import ConnectFour
-torch.manual_seed(10)
 
-BASE_DIR = Path.home() / "Documents" / "AlphaZero-Chomp"
-FIGURES_DIR = BASE_DIR / "figures"
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from experiment_utils.runtime import (
+    metadata,
+    prepare_play_run,
+)
+
+cli, OUTPUT_DIR, checkpoint = prepare_play_run(_REPO_ROOT, args)
 
 game = ConnectFour()
 player = 1
-mode = "avo"
+mode = cli.eval_mode
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-model = ResNet(game, 9, 128, device)
-model.load_state_dict(torch.load(BASE_DIR / "weights" / "Connect_Four" / "Working" / "model_19_ConnectFour.pt", map_location=device))
+model = ResNet(game, args["num_resBlocks"], args["num_hidden"], device)
+model.load_state_dict(torch.load(checkpoint, map_location=device))
 model.eval()
 mcts = MCTS(game, args, model)
 state = game.get_initial_state()
@@ -97,12 +105,13 @@ print(f"Best moves: {best_moves}")
 
 
 data = {
+    "metadata": metadata(args, checkpoint, mode=mode),
     "move_sequence": move_sequence,
     "score_state": score_state,
     "best_moves": best_moves
 }
 
-with open(FIGURES_DIR / f"game_trace_{args['row_count']*args['column_count']}_{mode}.json", "w") as f:
+with open(OUTPUT_DIR / f"game_trace_{args['row_count']*args['column_count']}_{mode}.json", "w") as f:
     json.dump(data, f, indent=2)
 
 
@@ -118,5 +127,6 @@ plt.xlabel("Move Number")
 plt.ylabel("Score")
 plt.title("Score vs. Move Number")
 plt.grid(True)
-plt.savefig(FIGURES_DIR / f"score_{args['row_count']*args['column_count']}_{mode}.png", dpi=300, bbox_inches='tight')
-plt.show()
+plt.savefig(OUTPUT_DIR / f"score_{args['row_count']*args['column_count']}_{mode}.png", dpi=300, bbox_inches='tight')
+if cli.show_plot:
+    plt.show()

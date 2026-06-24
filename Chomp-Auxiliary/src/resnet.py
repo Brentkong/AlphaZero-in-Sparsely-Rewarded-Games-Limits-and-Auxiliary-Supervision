@@ -1,12 +1,11 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-torch.manual_seed(0)
 
 class ResNet(nn.Module):
     def __init__(self, game, num_resBlocks, num_hidden, device):
         super().__init__()
-        
+
         self.device = device
         self.startBlock = nn.Sequential(
             nn.Conv2d(1, num_hidden, kernel_size=3, padding=1),
@@ -61,4 +60,3 @@ class ResBlock(nn.Module):
         x += residual
         x = F.relu(x)
         return x
-        

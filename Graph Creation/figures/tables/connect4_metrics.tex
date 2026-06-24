@@ -2,12 +2,12 @@
 \centering
 \caption{Connect Four trace-level metrics across model variants, reported separately for first-player and second-player turns.}
 \label{tab:connect4_trace_metrics}
-\begin{tabular}{llrrlrr}
+\begin{tabular}{llrrrrlrrrr}
 \toprule
-Model & Oracle-match rate (P1) & Longest oracle-consistent chain (P1) & First non-oracle ply (P1) & Oracle-match rate (P2) & Longest oracle-consistent chain (P2) & First non-oracle ply (P2) \\
+Model & Oracle-match rate (P1) & Longest oracle-consistent chain (P1) & Oracle-consistent prefix (P1) & First non-oracle ply (P1) & Failure depth (P1) & Oracle-match rate (P2) & Longest oracle-consistent chain (P2) & Oracle-consistent prefix (P2) & First non-oracle ply (P2) & Failure depth (P2) \\
 \midrule
-Vanilla & 0.800 & 14 & 0 & 0.789 & 8 & 3 \\
-AZAL & 0.905 & 9 & 18 & 0.952 & 12 & 25 \\
+Vanilla & 0.800 (16/20) & 14 & 0 & 0 & 0 & 0.789 (15/19) & 8 & 1 & 3 & 3 \\
+AZAL & 0.905 (19/21) & 9 & 9 & 18 & 18 & 0.952 (20/21) & 12 & 12 & 25 & 25 \\
 \bottomrule
 \end{tabular}
 \end{table*}

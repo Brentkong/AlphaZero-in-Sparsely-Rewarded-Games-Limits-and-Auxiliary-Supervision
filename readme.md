@@ -33,7 +33,7 @@ The root also has `requirements.txt`. The current root and subproject requiremen
 The repository currently contains code for three AlphaZero-style variants:
 
 - **Vanilla AlphaZero** - standard self-play, MCTS, policy loss, and value loss.
-- **Multi-frame AlphaZero** - Chomp-only variant that encodes several recent states instead of a single board.
+- **Multi-frame AlphaZero** - Chomp-only variant that encodes several recent states instead of a single board. This checkout does not include a Connect Four multi-frame variant, so multi-frame claims should be scoped to Chomp.
 - **AlphaZero Auxiliary Loss (AZAL)** - adds an oracle-derived auxiliary policy loss:
 
 ```text
@@ -94,6 +94,19 @@ Training uses Weights & Biases through `wandb.init(...)` and writes model/optimi
 
 Edit each variant's `src/config.py` to change board size, iteration counts, search counts, batch size, auxiliary-loss weight, or solver path.
 
+Training entry points also accept runtime overrides:
+
+```bash
+python main.py --seed 1 --num-searches 200 --wandb-mode disabled
+python main.py --seed 1 --rows 10 --cols 11 --outdir ../../results --wandb-mode offline
+```
+
+Checkpoints and `config_snapshot.json` are written under:
+
+```text
+results/{game}/{variant}/{board}/seed_{seed}/
+```
+
 ## Oracle Notes
 
 For Chomp, the oracle wrappers use `grundy.cpp` through a native library:
@@ -123,13 +136,11 @@ or:
 
 The `src/play.py` scripts load a saved checkpoint, run AlphaZero-vs-AlphaZero, AlphaZero-vs-player, or AlphaZero-vs-oracle style rollouts depending on the `mode` variable, and write trace JSON/PNG outputs.
 
-The checkpoint and output paths are built with `pathlib.Path` from:
+The checkpoint and output paths are now command-line parameters. If `--checkpoint` is omitted, `play.py` uses the latest `model_*.pt` under the matching result directory.
 
-```python
-Path.home() / "Documents" / "AlphaZero-Chomp"
+```bash
+python play.py --seed 1 --checkpoint ../../results/Chomp/Vanilla/9x10/seed_1/model_9_Chomp\(9x10\).pt --eval-mode ava
 ```
-
-If your checkpoints live somewhere else, update `BASE_DIR` in the relevant `src/play.py`.
 
 Trace JSONs use:
 
@@ -159,6 +170,16 @@ Example commands:
 cd "Graph Creation"
 python generate_trace_graphs.py --config config/chomp_9x10_config.json --outdir figures/graphs
 python generate_trace_tables.py --config config/chomp_9x10_config.json --outdir figures/tables
+```
+
+Additional reviewer-support utilities live in `evaluation/`:
+
+```bash
+python evaluation/run_multiseed.py --seeds 0 1 2 --wandb-mode disabled
+python evaluation/sampled_state_eval.py --game chomp --src-dir Chomp-Vanilla/src --checkpoint path/to/model.pt --rows 9 --cols 10
+python evaluation/moving_target_diagnostic.py --game connect4 --src-dir ConnectFour-Vanilla/src --checkpoint path/to/model.pt
+python evaluation/export_hyperparameters.py --seed-count 3
+python evaluation/aggregate_traces.py --inputs results/**/game_trace_*_ava.json --outdir results/summary
 ```
 
 The checked-in config JSON files use paths relative to the config file, pointing at the checked-in trace files under `Graph Creation/games/`.
