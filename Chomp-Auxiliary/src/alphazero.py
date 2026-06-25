@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import wandb
-from tqdm.notebook import trange
+from tqdm import trange
 import random
 from mcts import MCTSParallel
 
