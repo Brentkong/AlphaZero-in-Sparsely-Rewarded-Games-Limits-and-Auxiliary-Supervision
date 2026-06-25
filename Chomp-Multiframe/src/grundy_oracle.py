@@ -1,8 +1,32 @@
 import ctypes
+import os
 import numpy as np
 from config import args
 
-lib = ctypes.CDLL("./libgrundy.dylib") 
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_CANDIDATES = [
+    os.path.join(_HERE, "libgrundy.so"),
+    os.path.join(_HERE, "libgrundy.dylib"),
+    "./libgrundy.so",
+    "./libgrundy.dylib",
+]
+
+lib = None
+for _p in _CANDIDATES:
+    if os.path.exists(_p):
+        try:
+            lib = ctypes.CDLL(_p)
+            break
+        except OSError:
+            pass
+
+if lib is None:
+    raise OSError(
+        "Could not load libgrundy (expected libgrundy.so on Linux or "
+        "libgrundy.dylib on macOS). Build it from grundy.cpp, e.g.:\n"
+        "  Linux:  g++     -O3 -std=c++17 -shared -fPIC grundy.cpp -o libgrundy.so\n"
+        "  macOS:  clang++ -O3 -std=c++17 -shared -fPIC grundy.cpp -o libgrundy.dylib"
+    )
 
 lib.grundy_value.argtypes = [
     ctypes.POINTER(ctypes.c_int),
