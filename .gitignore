@@ -177,7 +177,7 @@ cython_debug/
 
 # Models
 models/
-weights/
+Results/
 *.pth.tar
 *.pt
 
