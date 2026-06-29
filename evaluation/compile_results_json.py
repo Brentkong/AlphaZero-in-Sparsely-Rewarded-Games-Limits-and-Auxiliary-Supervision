@@ -189,6 +189,7 @@ def summarize_trace(path: Path, results_dir: Path) -> Dict[str, Any]:
     return {
         **meta,
         "move_count": len(moves),
+        "sampled_selfplay": sampled_selfplay_counts(trace),
         "players": {
             "all": metric_block(trace, flags, None),
             "p1": metric_block(trace, flags, 0),
@@ -674,6 +675,79 @@ def add_mean_std_fields(
         row[f"{prefix}_n"] = n
 
 
+def connect4_winner(moves: List[int]) -> Optional[int]:
+    rows, cols = 6, 7
+    board = [[0 for _ in range(cols)] for _ in range(rows)]
+
+    def won(row: int, col: int, player: int) -> bool:
+        for dr, dc in ((1, 0), (0, 1), (1, 1), (1, -1)):
+            total = 1
+            for sign in (1, -1):
+                r, c = row + sign * dr, col + sign * dc
+                while 0 <= r < rows and 0 <= c < cols and board[r][c] == player:
+                    total += 1
+                    r += sign * dr
+                    c += sign * dc
+            if total >= 4:
+                return True
+        return False
+
+    for idx, action in enumerate(moves):
+        if not isinstance(action, int) or action < 0 or action >= cols:
+            return None
+        player = 1 if idx % 2 == 0 else -1
+        open_rows = [r for r in range(rows - 1, -1, -1) if board[r][action] == 0]
+        if not open_rows:
+            return None
+        row = open_rows[0]
+        board[row][action] = player
+        if won(row, action, player):
+            return player
+    return 0 if len(moves) == rows * cols else None
+
+
+def final_outcomes(trace: Dict[str, Any], count: int) -> List[Optional[int]]:
+    moves = trace.get("move_sequence", [])
+    if not isinstance(moves, list) or not moves:
+        return [None] * count
+    if isinstance(trace.get("grundy_numbers"), list):
+        loser = 1 if (len(moves) - 1) % 2 == 0 else -1
+        return [-1 if (1 if idx % 2 == 0 else -1) == loser else 1 for idx in range(count)]
+    winner = connect4_winner([int(move) for move in moves])
+    if winner is None:
+        return [None] * count
+    if winner == 0:
+        return [0] * count
+    return [1 if (1 if idx % 2 == 0 else -1) == winner else -1 for idx in range(count)]
+
+
+def sampled_selfplay_counts(trace: Dict[str, Any]) -> Dict[str, int]:
+    values = trace.get("grundy_numbers")
+    chomp = isinstance(values, list)
+    if not chomp:
+        values = trace.get("score_state")
+    if not isinstance(values, list):
+        return {"positions": 0, "oracle_losing": 0, "oracle_losing_but_rollout_won": 0}
+
+    positions = 0
+    oracle_losing = 0
+    losing_but_won = 0
+    for value, outcome in zip(values, final_outcomes(trace, len(values))):
+        if value is None or outcome is None:
+            continue
+        positions += 1
+        losing = int(value) == 0 if chomp else float(value) < 0
+        if losing:
+            oracle_losing += 1
+            if outcome > 0:
+                losing_but_won += 1
+    return {
+        "positions": positions,
+        "oracle_losing": oracle_losing,
+        "oracle_losing_but_rollout_won": losing_but_won,
+    }
+
+
 def variation_summary_rows(trace_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     grouped: Dict[Tuple[str, str, str], List[Dict[str, Any]]] = defaultdict(list)
     for row in trace_rows:
@@ -684,6 +758,8 @@ def variation_summary_rows(trace_rows: List[Dict[str, Any]]) -> List[Dict[str, A
         matches, labeled, match_rate = pooled_match(rows, "all")
         p1_matches, p1_labeled, p1_rate = pooled_match(rows, "p1")
         p2_matches, p2_labeled, p2_rate = pooled_match(rows, "p2")
+        losing_won = sum(row["sampled_selfplay"]["oracle_losing_but_rollout_won"] for row in rows)
+        oracle_losing = sum(row["sampled_selfplay"]["oracle_losing"] for row in rows)
         perfect_traces = sum(
             1 for row in rows if row["players"]["all"]["first_non_oracle_ply"] is None
         )
@@ -707,6 +783,12 @@ def variation_summary_rows(trace_rows: List[Dict[str, Any]]) -> List[Dict[str, A
             "p2_oracle_match_labeled": p2_labeled,
             "perfect_trace_rate": perfect_traces / len(rows) if rows else None,
             "perfect_traces": perfect_traces,
+            "sampled_selfplay_positions": sum(
+                row["sampled_selfplay"]["positions"] for row in rows
+            ),
+            "sampled_selfplay_oracle_losing_but_rollout_won": rate_count_block(
+                losing_won, oracle_losing
+            ),
         }
         add_mean_std_fields(
             result,
