@@ -288,10 +288,6 @@ def add_random_start_sampled_metrics(rows: List[Dict[str, Any]]) -> None:
         }
 
 
-def unique_run_count(rows: List[Dict[str, Any]]) -> int:
-    return len({(row["board"], row["seed"]) for row in rows})
-
-
 def trace_values(rows: List[Dict[str, Any]], player: str, field: str) -> List[Any]:
     return [row["players"][player][field] for row in rows]
 
