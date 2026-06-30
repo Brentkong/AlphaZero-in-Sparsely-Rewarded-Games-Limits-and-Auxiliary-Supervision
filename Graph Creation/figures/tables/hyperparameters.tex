@@ -1,19 +1,21 @@
 \begin{table*}[t]
 \centering
-\caption{Experiment hyperparameters exported from checked-in config files.}
-\label{tab:hyperparameters}
-\begin{tabular}{llllllllllllllllllll}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{Reproducibility appendix hyperparameters exported from checked-in config files.}
+\label{tab:reproducibility_hyperparameters}
+\begin{tabular}{lllllllllllllllll}
 \toprule
-Experiment & Game & Variant & Board & Residual blocks & Channels & MCTS simulations & Iterations & Self-play games & Parallel games & Epochs & Batch size & Learning rate & Weight decay & Dirichlet epsilon & Dirichlet alpha & Temperature & Auxiliary weight & Seed count & Checkpoint selection \\
+Experiment & Game & Variant & Board & Architecture & Residual blocks/channels & MCTS simulations & Training iterations & Games per iteration & Replay buffer size & Batch size & Learning rate & Auxiliary-loss weight & Temperature schedule & Dirichlet noise & Checkpoint rule & Seed count \\
 \midrule
-chomp-azal-10x11 & Chomp & AZAL & 10x11 & 9 & 128 & 800 & 10 & 700 & 100 & 4 & 128 & 0.001 & 0.0001 & 0.25 & 0.3 & 1.25 & 1 & 1 & last iteration checkpoint \\
-chomp-azal-9x10 & Chomp & AZAL & 9x10 & 9 & 128 & 800 & 10 & 700 & 100 & 4 & 128 & 0.001 & 0.0001 & 0.25 & 0.3 & 1.25 & 1 & 1 & last iteration checkpoint \\
-chomp-multiframe-10x11 & Chomp & Multi-Frame & 10x11 & 9 & 128 & 800 & 10 & 700 & 100 & 4 & 128 & 0.001 & 0.0001 & 0.25 & 0.3 & 1.25 & N/A & 1 & last iteration checkpoint \\
-chomp-multiframe-9x10 & Chomp & Multi-Frame & 9x10 & 9 & 128 & 800 & 10 & 700 & 100 & 4 & 128 & 0.001 & 0.0001 & 0.25 & 0.3 & 1.25 & N/A & 1 & last iteration checkpoint \\
-chomp-vanilla-10x11 & Chomp & Vanilla & 10x11 & 9 & 128 & 800 & 10 & 700 & 100 & 4 & 128 & 0.001 & 0.0001 & 0.25 & 0.3 & 1.25 & N/A & 1 & last iteration checkpoint \\
-chomp-vanilla-9x10 & Chomp & Vanilla & 9x10 & 9 & 128 & 800 & 10 & 700 & 100 & 4 & 128 & 0.001 & 0.0001 & 0.25 & 0.3 & 1.25 & N/A & 1 & last iteration checkpoint \\
-connect4-azal & Connect Four & AZAL & 6x7 & 9 & 128 & 1000 & 20 & 700 & 100 & 4 & 128 & 0.001 & 0.0001 & 0.25 & 0.3 & 1.25 & 1 & 1 & last iteration checkpoint \\
-connect4-vanilla & Connect Four & Vanilla & 6x7 & 9 & 128 & 1000 & 20 & 700 & 100 & 4 & 128 & 0.001 & 0.0001 & 0.25 & 0.3 & 1.25 & N/A & 1 & last iteration checkpoint \\
+chomp-azal-10x11 & Chomp & AZAL & 10x11 & Dual-head Conv-ResNet (1-plane input) & 9/128 & 800 & 10 & 700 & All states from 700 games (no cap) & 128 & 0.001 & 1 & constant 1.25 & epsilon=0.25, alpha=0.3 & last iteration checkpoint & 3 \\
+chomp-azal-9x10 & Chomp & AZAL & 9x10 & Dual-head Conv-ResNet (1-plane input) & 9/128 & 800 & 10 & 700 & All states from 700 games (no cap) & 128 & 0.001 & 1 & constant 1.25 & epsilon=0.25, alpha=0.3 & last iteration checkpoint & 3 \\
+chomp-multiframe-10x11 & Chomp & Multi-Frame & 10x11 & Dual-head Conv-ResNet (3-frame input) & 9/128 & 800 & 10 & 700 & All states from 700 games (no cap) & 128 & 0.001 & N/A & constant 1.25 & epsilon=0.25, alpha=0.3 & last iteration checkpoint & 3 \\
+chomp-multiframe-9x10 & Chomp & Multi-Frame & 9x10 & Dual-head Conv-ResNet (3-frame input) & 9/128 & 800 & 10 & 700 & All states from 700 games (no cap) & 128 & 0.001 & N/A & constant 1.25 & epsilon=0.25, alpha=0.3 & last iteration checkpoint & 3 \\
+chomp-vanilla-10x11 & Chomp & Vanilla & 10x11 & Dual-head Conv-ResNet (1-plane input) & 9/128 & 800 & 10 & 700 & All states from 700 games (no cap) & 128 & 0.001 & N/A & constant 1.25 & epsilon=0.25, alpha=0.3 & last iteration checkpoint & 3 \\
+chomp-vanilla-9x10 & Chomp & Vanilla & 9x10 & Dual-head Conv-ResNet (1-plane input) & 9/128 & 800 & 10 & 700 & All states from 700 games (no cap) & 128 & 0.001 & N/A & constant 1.25 & epsilon=0.25, alpha=0.3 & last iteration checkpoint & 3 \\
+connect4-azal & Connect Four & AZAL & 6x7 & Dual-head Conv-ResNet (3-plane input) & 9/128 & 1000 & 20 & 700 & All states from 700 games (no cap) & 128 & 0.001 & 1 & constant 1.25 & epsilon=0.25, alpha=0.3 & last iteration checkpoint & 3 \\
+connect4-vanilla & Connect Four & Vanilla & 6x7 & Dual-head Conv-ResNet (3-plane input) & 9/128 & 1000 & 20 & 700 & All states from 700 games (no cap) & 128 & 0.001 & N/A & constant 1.25 & epsilon=0.25, alpha=0.3 & last iteration checkpoint & 3 \\
 \bottomrule
 \end{tabular}
 \end{table*}

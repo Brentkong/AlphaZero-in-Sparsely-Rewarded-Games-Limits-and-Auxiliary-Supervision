@@ -40,27 +40,31 @@ def row_for_experiment(
         config["rows"] = exp["rows"]
         config["cols"] = exp["cols"]
     aux_weight = config.get("p_move_lambda", config.get("aux_weight", "N/A"))
+    games_per_iteration = config.get("num_selfPlay_iterations")
+    if exp["game"] == "connect4":
+        input_desc = "3-plane"
+    elif "num_frames" in config:
+        input_desc = f"{config['num_frames']}-frame"
+    else:
+        input_desc = "1-plane"
     return {
         "Experiment": name,
         "Game": config.get("game_name", "Chomp" if exp["game"] == "chomp" else "Connect Four"),
         "Variant": config.get("variant", exp["variant"]),
         "Board": board_label(config),
-        "Residual blocks": config.get("num_resBlocks"),
-        "Channels": config.get("num_hidden"),
+        "Architecture": f"Dual-head Conv-ResNet ({input_desc} input)",
+        "Residual blocks/channels": f"{config.get('num_resBlocks')}/{config.get('num_hidden')}",
         "MCTS simulations": config.get("num_searches"),
-        "Iterations": config.get("num_iterations"),
-        "Self-play games": config.get("num_selfPlay_iterations"),
-        "Parallel games": config.get("num_parallel_games"),
-        "Epochs": config.get("num_epochs"),
+        "Training iterations": config.get("num_iterations"),
+        "Games per iteration": games_per_iteration,
+        "Replay buffer size": f"All states from {games_per_iteration} games (no cap)",
         "Batch size": config.get("batch_size"),
         "Learning rate": config.get("lr"),
-        "Weight decay": config.get("weight_decay"),
-        "Dirichlet epsilon": config.get("dirichlet_epsilon"),
-        "Dirichlet alpha": config.get("dirichlet_alpha"),
-        "Temperature": config.get("temperature"),
-        "Auxiliary weight": aux_weight,
+        "Auxiliary-loss weight": aux_weight,
+        "Temperature schedule": f"constant {config.get('temperature')}",
+        "Dirichlet noise": f"epsilon={config.get('dirichlet_epsilon')}, alpha={config.get('dirichlet_alpha')}",
+        "Checkpoint rule": checkpoint_rule or config.get("checkpoint_selection_rule", "last iteration checkpoint"),
         "Seed count": seed_count,
-        "Checkpoint selection": checkpoint_rule or config.get("checkpoint_selection_rule", "last iteration checkpoint"),
     }
 
 
@@ -77,8 +81,10 @@ def write_tex(path: Path, rows: List[Dict[str, Any]]) -> None:
     lines = [
         r"\begin{table*}[t]",
         r"\centering",
-        r"\caption{Experiment hyperparameters exported from checked-in config files.}",
-        r"\label{tab:hyperparameters}",
+        r"\scriptsize",
+        r"\setlength{\tabcolsep}{3pt}",
+        r"\caption{Reproducibility appendix hyperparameters exported from checked-in config files.}",
+        r"\label{tab:reproducibility_hyperparameters}",
         f"\\begin{{tabular}}{{{columns}}}",
         r"\toprule",
         " & ".join(headers) + r" \\",
@@ -95,7 +101,7 @@ def main() -> None:
         description="Export a hyperparameter table from variant config.py files."
     )
     parser.add_argument("--outdir", type=Path, default=REPO_ROOT / "Graph Creation" / "figures" / "tables")
-    parser.add_argument("--seed-count", type=int, default=1)
+    parser.add_argument("--seed-count", type=int, default=3)
     parser.add_argument("--checkpoint-rule", default=None)
     parser.add_argument(
         "--experiments",
