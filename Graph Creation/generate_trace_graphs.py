@@ -14,17 +14,17 @@ SAMPLE_CONFIG: Dict[str, Any] = {
             "title": "Chomp 10x11 Self-Play",
             "ylabel": "Grundy number g(s_t)",
             "traces": {
-                "Vanilla": "/mnt/data/chomp_vanilla_10x11_selfplay.json",
-                "Multi-Frame": "/mnt/data/chomp_multiframe_10x11_selfplay.json",
-                "AZAL": "/mnt/data/chomp_azal_10x11_selfplay.json",
+                "Vanilla": "../games/Chomp/10x11/Vanilla/game_trace_110_ava.json",
+                "Multi-Frame": "../games/Chomp/10x11/Multi-Frame/game_trace_110_ava.json",
+                "AZAL": "../games/Chomp/10x11/Auxiliary/game_trace_110_ava.json",
             },
         },
         "connect4": {
             "title": "Connect Four Self-Play",
             "ylabel": "Oracle score of current state",
             "traces": {
-                "Vanilla": "/mnt/data/connect4_vanilla_selfplay.json",
-                "AZAL": "/mnt/data/connect4_azal_selfplay.json",
+                "Vanilla": "../games/Connect Four/Vanilla/game_trace_42_ava.json",
+                "AZAL": "../games/Connect Four/Auxiliary/game_trace_42_ava.json",
             },
         },
     }

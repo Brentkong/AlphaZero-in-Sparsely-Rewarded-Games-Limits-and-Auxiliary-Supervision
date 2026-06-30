@@ -8,7 +8,7 @@ ENTITY  = os.environ.get("WANDB_ENTITY")
 PROJECT = "AlphaZero"
 RUN_ID  = "cbgi8g5h"
 NAME = "10x11_Auxiliary"
-BASE_DIR = Path.home() / "Documents" / "AlphaZero-Chomp"
+BASE_DIR = Path(__file__).resolve().parent
 HISTORY_DIR = BASE_DIR / "history"
 
 if ENTITY is None:
@@ -21,4 +21,5 @@ df = run.history(pandas = True)
 if "p_move_loss" in df.columns:
     print("Subtracting p_move_loss")
     df["total_loss"] -= df["p_move_loss"]
+HISTORY_DIR.mkdir(parents=True, exist_ok=True)
 df.to_csv(HISTORY_DIR / f"run_history_{NAME}.csv", index = False)

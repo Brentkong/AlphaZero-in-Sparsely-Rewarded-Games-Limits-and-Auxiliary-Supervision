@@ -3,9 +3,9 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 
-BASE_DIR = Path.home() / "Documents" / "AlphaZero-Chomp"
+BASE_DIR = Path(__file__).resolve().parent
 csv_dir = BASE_DIR / "history"
-out_dir = BASE_DIR / "figures"
+out_dir = BASE_DIR / "figures" / "graphs"
 
 out_dir.mkdir(parents=True, exist_ok=True)
 
