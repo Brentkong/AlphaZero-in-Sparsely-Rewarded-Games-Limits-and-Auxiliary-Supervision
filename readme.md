@@ -16,6 +16,9 @@ Top-level directories:
 | `ConnectFour-Vanilla/` | Vanilla AlphaZero for 6x7 Connect Four. Includes Python training code and a bundled `connect4-master/` perfect solver source/binary/opening book. |
 | `ConnectFour-Auxiliary/` | Connect Four AlphaZero with auxiliary oracle policy loss. Uses `PerfectC4Oracle` and the bundled `connect4-master/` solver. |
 | `Graph Creation/` | Analysis scripts, trace JSONs, training-history CSVs, generated graph PNGs, and generated LaTeX tables. |
+| `evaluation/` | Multi-seed experiment runner, sampled-state and moving-target diagnostics, trace aggregation, and result-compilation utilities. |
+| `experiment_utils/` | Shared runtime helpers for deterministic seeding, CLI overrides, output paths, and configuration snapshots. |
+| `eval-results/` | Published final checkpoints for every seed/configuration plus compact compiled and sampled-state evaluation results. |
 
 Each experiment directory has:
 
@@ -107,6 +110,12 @@ Checkpoints and `config_snapshot.json` are written under:
 results/{game}/{variant}/{board}/seed_{seed}/
 ```
 
+The lowercase `results/` directory above is the default for newly launched
+runs. It is ignored by Git. The uppercase `Results/` and
+`Results-experiment/` directories, when present locally, contain the larger
+raw experiment outputs used to build the curated, tracked `eval-results/`
+release.
+
 ## Oracle Notes
 
 For Chomp, the oracle wrappers use `grundy.cpp` through a native library:
@@ -139,8 +148,21 @@ The `src/play.py` scripts load a saved checkpoint, run AlphaZero-vs-AlphaZero, A
 The checkpoint and output paths are now command-line parameters. If `--checkpoint` is omitted, `play.py` uses the latest `model_*.pt` under the matching result directory.
 
 ```bash
-python play.py --seed 1 --checkpoint ../../results/Chomp/Vanilla/9x10/seed_1/model_9_Chomp\(9x10\).pt --eval-mode ava
+python play.py --seed 1 --rows 9 --cols 10 \
+  --checkpoint ../../eval-results/checkpoints/Chomp/Vanilla/9x10/seed_1/model_9_Chomp\(9x10\).pt \
+  --eval-mode ava
 ```
+
+The published checkpoints are organized as follows:
+
+```text
+eval-results/checkpoints/Chomp/{AZAL,Vanilla,MultiFrame}/{9x10,10x11}/seed_{0,1,2}/
+eval-results/checkpoints/Connect-Four/{AZAL,Vanilla}/6x7/seed_{0,1,2}/
+```
+
+Chomp uses the final iteration-9 checkpoint; Connect Four uses the final
+iteration-19 checkpoint. The matching hyperparameters are under
+`eval-results/configs/`.
 
 Trace JSONs use:
 
@@ -183,6 +205,19 @@ python evaluation/export_hyperparameters.py --seed-count 3
 python evaluation/aggregate_traces.py --inputs results/**/game_trace_*_ava.json --outdir results/summary
 ```
 
+To reproduce the checked-in sampled-state evaluation from the local raw
+checkpoints under `Results/`, run:
+
+```bash
+bash run_sampled_state_experiment.sh
+python evaluation/compile_results_json.py --results-dir Results --output Results/compiled_results.json
+```
+
+The first command evaluates five sampled states at depths `0`, `4`, `8`, and
+`12` for each published seed/configuration and writes to
+`Results-experiment/evaluations/sampled/`. These local raw outputs were copied
+into `eval-results/evaluations/` for publication.
+
 `run_multiseed.py` defaults to seeds `0 1 2` and `20` trace games per
 checkpoint. With `--sampled-states`, it samples `32` states at each requested
 depth (`0 4 8 12` by default). With `--moving-target`, it runs `8` self-play
@@ -196,9 +231,17 @@ The checked-in config JSON files use paths relative to the config file, pointing
 export WANDB_ENTITY="your-wandb-entity"
 ```
 
-## Generated Results Currently Checked In
+## Published Results
 
-The repository includes generated assets, including:
+The compact, publication-ready result bundle is documented in
+[`eval-results/README.md`](eval-results/README.md) and contains:
+
+- 24 final model checkpoints: three seeds for each game/variant/board setup
+- 24 matching `config_snapshot.json` files
+- `eval-results/evaluations/compiled_results.json`, with metrics aggregated across seeds
+- 24 sampled-state result sets in both JSON and CSV format
+
+The repository also includes generated assets, including:
 
 - Chomp trace JSONs and Grundy-number plots under each Chomp variant's `figures/`
 - Connect Four trace JSONs and score plots under each Connect Four variant's `figures/`
