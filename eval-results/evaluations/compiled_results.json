@@ -1,0 +1,762 @@
+[
+  {
+    "variation": "Chomp AZAL 10x11",
+    "game": "Chomp",
+    "model": "AZAL",
+    "board": "10x11",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "full_game_self_play": {
+      "games": 60,
+      "game_length": {
+        "mean": 26.433333333333334,
+        "std": 2.7830838211515574,
+        "formatted": "26.433 +/- 2.783"
+      },
+      "perfect_traces": {
+        "rate": 1.0,
+        "count": 60,
+        "total": 60,
+        "formatted": "1.000 (60/60)"
+      }
+    },
+    "oracle_move_match": {
+      "all": {
+        "rate": 1.0,
+        "count": 793,
+        "total": 793,
+        "formatted": "1.000 (793/793)"
+      },
+      "p1": {
+        "rate": 1.0,
+        "count": 793,
+        "total": 793,
+        "formatted": "1.000 (793/793)"
+      },
+      "p2": {
+        "rate": null,
+        "count": 0,
+        "total": 0,
+        "formatted": "N/A"
+      },
+      "per_game": {
+        "mean": 1.0,
+        "std": 0.0,
+        "formatted": "1.000 +/- 0.000"
+      }
+    },
+    "oracle_chain": {
+      "longest": {
+        "mean": 13.216666666666667,
+        "std": 1.3915419105757787,
+        "formatted": "13.217 +/- 1.392"
+      },
+      "consistent_prefix": {
+        "mean": 13.216666666666667,
+        "std": 1.3915419105757787,
+        "formatted": "13.217 +/- 1.392"
+      },
+      "first_non_oracle_ply": {
+        "mean": null,
+        "std": null,
+        "formatted": "N/A"
+      }
+    },
+    "oracle_value_vs_rollout": {
+      "positions": 1586,
+      "oracle_losing_but_rollout_won": {
+        "rate": 0.0,
+        "count": 0,
+        "total": 793,
+        "formatted": "0.000 (0/793)"
+      }
+    },
+    "random_start_sampled_state": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "positions": 39,
+      "oracle_move_match": {
+        "rate": 0.8285714285714286,
+        "count": 29,
+        "total": 35,
+        "formatted": "0.829 (29/35)"
+      },
+      "oracle_match_over_runs": {
+        "mean": 0.8155844155844155,
+        "std": 0.0933319679601999,
+        "formatted": "0.816 +/- 0.093"
+      }
+    }
+  },
+  {
+    "variation": "Chomp AZAL 9x10",
+    "game": "Chomp",
+    "model": "AZAL",
+    "board": "9x10",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "full_game_self_play": {
+      "games": 60,
+      "game_length": {
+        "mean": 36.46666666666667,
+        "std": 7.988463904628695,
+        "formatted": "36.467 +/- 7.988"
+      },
+      "perfect_traces": {
+        "rate": 0.5666666666666667,
+        "count": 34,
+        "total": 60,
+        "formatted": "0.567 (34/60)"
+      }
+    },
+    "oracle_move_match": {
+      "all": {
+        "rate": 0.9483526268922529,
+        "count": 1065,
+        "total": 1123,
+        "formatted": "0.948 (1065/1123)"
+      },
+      "p1": {
+        "rate": 0.9620111731843576,
+        "count": 861,
+        "total": 895,
+        "formatted": "0.962 (861/895)"
+      },
+      "p2": {
+        "rate": 0.8947368421052632,
+        "count": 204,
+        "total": 228,
+        "formatted": "0.895 (204/228)"
+      },
+      "per_game": {
+        "mean": 0.9575305029109377,
+        "std": 0.05510808744616105,
+        "formatted": "0.958 +/- 0.055"
+      }
+    },
+    "oracle_chain": {
+      "longest": {
+        "mean": 13.45,
+        "std": 2.801338965566288,
+        "formatted": "13.450 +/- 2.801"
+      },
+      "consistent_prefix": {
+        "mean": 11.266666666666667,
+        "std": 4.72534537244516,
+        "formatted": "11.267 +/- 4.725"
+      },
+      "first_non_oracle_ply": {
+        "mean": 11.923076923076923,
+        "std": 1.0348941574672084,
+        "formatted": "11.923 +/- 1.035"
+      }
+    },
+    "oracle_value_vs_rollout": {
+      "positions": 2188,
+      "oracle_losing_but_rollout_won": {
+        "rate": 0.13990610328638498,
+        "count": 149,
+        "total": 1065,
+        "formatted": "0.140 (149/1065)"
+      }
+    },
+    "random_start_sampled_state": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "positions": 36,
+      "oracle_move_match": {
+        "rate": 1.0,
+        "count": 34,
+        "total": 34,
+        "formatted": "1.000 (34/34)"
+      },
+      "oracle_match_over_runs": {
+        "mean": 1.0,
+        "std": 0.0,
+        "formatted": "1.000 +/- 0.000"
+      }
+    }
+  },
+  {
+    "variation": "Chomp Multi-Frame 10x11",
+    "game": "Chomp",
+    "model": "Multi-Frame",
+    "board": "10x11",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "full_game_self_play": {
+      "games": 60,
+      "game_length": {
+        "mean": 16.7,
+        "std": 3.132091952673165,
+        "formatted": "16.700 +/- 3.132"
+      },
+      "perfect_traces": {
+        "rate": 0.0,
+        "count": 0,
+        "total": 60,
+        "formatted": "0.000 (0/60)"
+      }
+    },
+    "oracle_move_match": {
+      "all": {
+        "rate": 0.46277372262773725,
+        "count": 317,
+        "total": 685,
+        "formatted": "0.463 (317/685)"
+      },
+      "p1": {
+        "rate": 0.45776566757493187,
+        "count": 168,
+        "total": 367,
+        "formatted": "0.458 (168/367)"
+      },
+      "p2": {
+        "rate": 0.46855345911949686,
+        "count": 149,
+        "total": 318,
+        "formatted": "0.469 (149/318)"
+      },
+      "per_game": {
+        "mean": 0.4786005979601181,
+        "std": 0.13905370645997206,
+        "formatted": "0.479 +/- 0.139"
+      }
+    },
+    "oracle_chain": {
+      "longest": {
+        "mean": 5.216666666666667,
+        "std": 1.2921773184134684,
+        "formatted": "5.217 +/- 1.292"
+      },
+      "consistent_prefix": {
+        "mean": 0.0,
+        "std": 0.0,
+        "formatted": "0.000 +/- 0.000"
+      },
+      "first_non_oracle_ply": {
+        "mean": 0.0,
+        "std": 0.0,
+        "formatted": "0.000 +/- 0.000"
+      }
+    },
+    "oracle_value_vs_rollout": {
+      "positions": 1002,
+      "oracle_losing_but_rollout_won": {
+        "rate": 0.00946372239747634,
+        "count": 3,
+        "total": 317,
+        "formatted": "0.009 (3/317)"
+      }
+    },
+    "random_start_sampled_state": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "positions": 39,
+      "oracle_move_match": {
+        "rate": 0.2857142857142857,
+        "count": 10,
+        "total": 35,
+        "formatted": "0.286 (10/35)"
+      },
+      "oracle_match_over_runs": {
+        "mean": 0.26709956709956706,
+        "std": 0.13419773773885912,
+        "formatted": "0.267 +/- 0.134"
+      }
+    }
+  },
+  {
+    "variation": "Chomp Multi-Frame 9x10",
+    "game": "Chomp",
+    "model": "Multi-Frame",
+    "board": "9x10",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "full_game_self_play": {
+      "games": 60,
+      "game_length": {
+        "mean": 13.916666666666666,
+        "std": 4.539793191569657,
+        "formatted": "13.917 +/- 4.540"
+      },
+      "perfect_traces": {
+        "rate": 0.0,
+        "count": 0,
+        "total": 60,
+        "formatted": "0.000 (0/60)"
+      }
+    },
+    "oracle_move_match": {
+      "all": {
+        "rate": 0.48312611012433393,
+        "count": 272,
+        "total": 563,
+        "formatted": "0.483 (272/563)"
+      },
+      "p1": {
+        "rate": 0.4563758389261745,
+        "count": 136,
+        "total": 298,
+        "formatted": "0.456 (136/298)"
+      },
+      "p2": {
+        "rate": 0.5132075471698113,
+        "count": 136,
+        "total": 265,
+        "formatted": "0.513 (136/265)"
+      },
+      "per_game": {
+        "mean": 0.46925570888806184,
+        "std": 0.14163360644526277,
+        "formatted": "0.469 +/- 0.142"
+      }
+    },
+    "oracle_chain": {
+      "longest": {
+        "mean": 4.4,
+        "std": 1.845715759987617,
+        "formatted": "4.400 +/- 1.846"
+      },
+      "consistent_prefix": {
+        "mean": 0.0,
+        "std": 0.0,
+        "formatted": "0.000 +/- 0.000"
+      },
+      "first_non_oracle_ply": {
+        "mean": 0.0,
+        "std": 0.0,
+        "formatted": "0.000 +/- 0.000"
+      }
+    },
+    "oracle_value_vs_rollout": {
+      "positions": 835,
+      "oracle_losing_but_rollout_won": {
+        "rate": 0.022058823529411766,
+        "count": 6,
+        "total": 272,
+        "formatted": "0.022 (6/272)"
+      }
+    },
+    "random_start_sampled_state": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "positions": 36,
+      "oracle_move_match": {
+        "rate": 0.17647058823529413,
+        "count": 6,
+        "total": 34,
+        "formatted": "0.176 (6/34)"
+      },
+      "oracle_match_over_runs": {
+        "mean": 0.17142857142857146,
+        "std": 0.05084322977157767,
+        "formatted": "0.171 +/- 0.051"
+      }
+    }
+  },
+  {
+    "variation": "Chomp Vanilla 10x11",
+    "game": "Chomp",
+    "model": "Vanilla",
+    "board": "10x11",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "full_game_self_play": {
+      "games": 60,
+      "game_length": {
+        "mean": 25.083333333333332,
+        "std": 2.3115050412135285,
+        "formatted": "25.083 +/- 2.312"
+      },
+      "perfect_traces": {
+        "rate": 0.0,
+        "count": 0,
+        "total": 60,
+        "formatted": "0.000 (0/60)"
+      }
+    },
+    "oracle_move_match": {
+      "all": {
+        "rate": 0.4740450538687561,
+        "count": 484,
+        "total": 1021,
+        "formatted": "0.474 (484/1021)"
+      },
+      "p1": {
+        "rate": 0.4163265306122449,
+        "count": 204,
+        "total": 490,
+        "formatted": "0.416 (204/490)"
+      },
+      "p2": {
+        "rate": 0.527306967984934,
+        "count": 280,
+        "total": 531,
+        "formatted": "0.527 (280/531)"
+      },
+      "per_game": {
+        "mean": 0.4796035738856947,
+        "std": 0.07139724861383169,
+        "formatted": "0.480 +/- 0.071"
+      }
+    },
+    "oracle_chain": {
+      "longest": {
+        "mean": 7.55,
+        "std": 1.175088649138155,
+        "formatted": "7.550 +/- 1.175"
+      },
+      "consistent_prefix": {
+        "mean": 0.0,
+        "std": 0.0,
+        "formatted": "0.000 +/- 0.000"
+      },
+      "first_non_oracle_ply": {
+        "mean": 0.0,
+        "std": 0.0,
+        "formatted": "0.000 +/- 0.000"
+      }
+    },
+    "oracle_value_vs_rollout": {
+      "positions": 1505,
+      "oracle_losing_but_rollout_won": {
+        "rate": 0.04338842975206612,
+        "count": 21,
+        "total": 484,
+        "formatted": "0.043 (21/484)"
+      }
+    },
+    "random_start_sampled_state": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "positions": 39,
+      "oracle_move_match": {
+        "rate": 0.4,
+        "count": 14,
+        "total": 35,
+        "formatted": "0.400 (14/35)"
+      },
+      "oracle_match_over_runs": {
+        "mean": 0.3813852813852814,
+        "std": 0.13484136230173513,
+        "formatted": "0.381 +/- 0.135"
+      }
+    }
+  },
+  {
+    "variation": "Chomp Vanilla 9x10",
+    "game": "Chomp",
+    "model": "Vanilla",
+    "board": "9x10",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "full_game_self_play": {
+      "games": 60,
+      "game_length": {
+        "mean": 21.45,
+        "std": 3.247691487810996,
+        "formatted": "21.450 +/- 3.248"
+      },
+      "perfect_traces": {
+        "rate": 0.0,
+        "count": 0,
+        "total": 60,
+        "formatted": "0.000 (0/60)"
+      }
+    },
+    "oracle_move_match": {
+      "all": {
+        "rate": 0.60875,
+        "count": 487,
+        "total": 800,
+        "formatted": "0.609 (487/800)"
+      },
+      "p1": {
+        "rate": 0.5784313725490197,
+        "count": 236,
+        "total": 408,
+        "formatted": "0.578 (236/408)"
+      },
+      "p2": {
+        "rate": 0.6403061224489796,
+        "count": 251,
+        "total": 392,
+        "formatted": "0.640 (251/392)"
+      },
+      "per_game": {
+        "mean": 0.6233369177119177,
+        "std": 0.11989360438047122,
+        "formatted": "0.623 +/- 0.120"
+      }
+    },
+    "oracle_chain": {
+      "longest": {
+        "mean": 7.866666666666666,
+        "std": 1.5648926125740668,
+        "formatted": "7.867 +/- 1.565"
+      },
+      "consistent_prefix": {
+        "mean": 0.0,
+        "std": 0.0,
+        "formatted": "0.000 +/- 0.000"
+      },
+      "first_non_oracle_ply": {
+        "mean": 0.0,
+        "std": 0.0,
+        "formatted": "0.000 +/- 0.000"
+      }
+    },
+    "oracle_value_vs_rollout": {
+      "positions": 1287,
+      "oracle_losing_but_rollout_won": {
+        "rate": 0.030800821355236138,
+        "count": 15,
+        "total": 487,
+        "formatted": "0.031 (15/487)"
+      }
+    },
+    "random_start_sampled_state": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "positions": 36,
+      "oracle_move_match": {
+        "rate": 0.5,
+        "count": 17,
+        "total": 34,
+        "formatted": "0.500 (17/34)"
+      },
+      "oracle_match_over_runs": {
+        "mean": 0.480952380952381,
+        "std": 0.11448395504925056,
+        "formatted": "0.481 +/- 0.114"
+      }
+    }
+  },
+  {
+    "variation": "Connect Four AZAL 6x7",
+    "game": "Connect Four",
+    "model": "AZAL",
+    "board": "6x7",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "full_game_self_play": {
+      "games": 60,
+      "game_length": {
+        "mean": 35.88333333333333,
+        "std": 7.4567456410659165,
+        "formatted": "35.883 +/- 7.457"
+      },
+      "perfect_traces": {
+        "rate": 0.0,
+        "count": 0,
+        "total": 60,
+        "formatted": "0.000 (0/60)"
+      }
+    },
+    "oracle_move_match": {
+      "all": {
+        "rate": 0.8490478402229448,
+        "count": 1828,
+        "total": 2153,
+        "formatted": "0.849 (1828/2153)"
+      },
+      "p1": {
+        "rate": 0.8399264029438822,
+        "count": 913,
+        "total": 1087,
+        "formatted": "0.840 (913/1087)"
+      },
+      "p2": {
+        "rate": 0.8583489681050657,
+        "count": 915,
+        "total": 1066,
+        "formatted": "0.858 (915/1066)"
+      },
+      "per_game": {
+        "mean": 0.8473529574114237,
+        "std": 0.05520759459246857,
+        "formatted": "0.847 +/- 0.055"
+      }
+    },
+    "oracle_chain": {
+      "longest": {
+        "mean": 16.966666666666665,
+        "std": 5.335312132908023,
+        "formatted": "16.967 +/- 5.335"
+      },
+      "consistent_prefix": {
+        "mean": 5.283333333333333,
+        "std": 3.9331567756983987,
+        "formatted": "5.283 +/- 3.933"
+      },
+      "first_non_oracle_ply": {
+        "mean": 5.283333333333333,
+        "std": 3.9331567756983987,
+        "formatted": "5.283 +/- 3.933"
+      }
+    },
+    "oracle_value_vs_rollout": {
+      "positions": 2153,
+      "oracle_losing_but_rollout_won": {
+        "rate": 0.17381228273464658,
+        "count": 150,
+        "total": 863,
+        "formatted": "0.174 (150/863)"
+      }
+    },
+    "random_start_sampled_state": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "positions": 56,
+      "oracle_move_match": {
+        "rate": 0.7678571428571429,
+        "count": 43,
+        "total": 56,
+        "formatted": "0.768 (43/56)"
+      },
+      "oracle_match_over_runs": {
+        "mean": 0.7690058479532164,
+        "std": 0.09724145700769528,
+        "formatted": "0.769 +/- 0.097"
+      }
+    }
+  },
+  {
+    "variation": "Connect Four Vanilla 6x7",
+    "game": "Connect Four",
+    "model": "Vanilla",
+    "board": "6x7",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "full_game_self_play": {
+      "games": 60,
+      "game_length": {
+        "mean": 36.083333333333336,
+        "std": 6.020220557052337,
+        "formatted": "36.083 +/- 6.020"
+      },
+      "perfect_traces": {
+        "rate": 0.0,
+        "count": 0,
+        "total": 60,
+        "formatted": "0.000 (0/60)"
+      }
+    },
+    "oracle_move_match": {
+      "all": {
+        "rate": 0.7852193995381063,
+        "count": 1700,
+        "total": 2165,
+        "formatted": "0.785 (1700/2165)"
+      },
+      "p1": {
+        "rate": 0.7705667276051188,
+        "count": 843,
+        "total": 1094,
+        "formatted": "0.771 (843/1094)"
+      },
+      "p2": {
+        "rate": 0.800186741363212,
+        "count": 857,
+        "total": 1071,
+        "formatted": "0.800 (857/1071)"
+      },
+      "per_game": {
+        "mean": 0.7703093860252765,
+        "std": 0.11753691881069683,
+        "formatted": "0.770 +/- 0.118"
+      }
+    },
+    "oracle_chain": {
+      "longest": {
+        "mean": 17.0,
+        "std": 8.324662155306964,
+        "formatted": "17.000 +/- 8.325"
+      },
+      "consistent_prefix": {
+        "mean": 0.8666666666666667,
+        "std": 1.309792180292567,
+        "formatted": "0.867 +/- 1.310"
+      },
+      "first_non_oracle_ply": {
+        "mean": 0.8666666666666667,
+        "std": 1.309792180292567,
+        "formatted": "0.867 +/- 1.310"
+      }
+    },
+    "oracle_value_vs_rollout": {
+      "positions": 2165,
+      "oracle_losing_but_rollout_won": {
+        "rate": 0.14373464373464373,
+        "count": 117,
+        "total": 814,
+        "formatted": "0.144 (117/814)"
+      }
+    },
+    "random_start_sampled_state": {
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "positions": 56,
+      "oracle_move_match": {
+        "rate": 0.5892857142857143,
+        "count": 33,
+        "total": 56,
+        "formatted": "0.589 (33/56)"
+      },
+      "oracle_match_over_runs": {
+        "mean": 0.5867446393762182,
+        "std": 0.1471960789758508,
+        "formatted": "0.587 +/- 0.147"
+      }
+    }
+  }
+]

@@ -1,0 +1,411 @@
+{
+  "metadata": {
+    "game": "Connect Four",
+    "variant": "AZAL",
+    "board": "6x7",
+    "seed": 1,
+    "checkpoint": "Results/Connect-Four/AZAL/6x7/seed_1/model_19_ConnectFour.pt"
+  },
+  "records": [
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -2,
+        -1,
+        0,
+        1,
+        0,
+        -1,
+        -2
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": 1
+    },
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -2,
+        -1,
+        0,
+        1,
+        0,
+        -1,
+        -2
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": 1
+    },
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -2,
+        -1,
+        0,
+        1,
+        0,
+        -1,
+        -2
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": 1
+    },
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -2,
+        -1,
+        0,
+        1,
+        0,
+        -1,
+        -2
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": 1
+    },
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -2,
+        -1,
+        0,
+        1,
+        0,
+        -1,
+        -2
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": 1
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        3,
+        2,
+        4,
+        0
+      ],
+      "scores": [
+        -2,
+        -3,
+        -2,
+        -2,
+        -2,
+        -3,
+        -5
+      ],
+      "match": true,
+      "chain_length": 8,
+      "failure_depth": null
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 5,
+      "best_moves": [
+        2,
+        4,
+        5
+      ],
+      "scores": [
+        -2,
+        -2,
+        0,
+        -2,
+        0,
+        0,
+        -2
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": 5
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 2,
+      "best_moves": [
+        2,
+        5
+      ],
+      "scores": [
+        -4,
+        -3,
+        -2,
+        -5,
+        -3,
+        -2,
+        -4
+      ],
+      "match": true,
+      "chain_length": 3,
+      "failure_depth": 7
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 5,
+      "best_moves": [
+        3,
+        1,
+        5
+      ],
+      "scores": [
+        -3,
+        2,
+        -1,
+        2,
+        0,
+        2,
+        -3
+      ],
+      "match": true,
+      "chain_length": 3,
+      "failure_depth": 7
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 4,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -6,
+        -4,
+        -4,
+        -1,
+        -2,
+        -4,
+        -5
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 4
+    },
+    {
+      "depth": 8,
+      "labeled": true,
+      "action": 4,
+      "best_moves": [
+        4
+      ],
+      "scores": [
+        -17,
+        -17,
+        -17,
+        -17,
+        4,
+        -17,
+        -17
+      ],
+      "match": true,
+      "chain_length": 5,
+      "failure_depth": 13
+    },
+    {
+      "depth": 8,
+      "labeled": true,
+      "action": 4,
+      "best_moves": [
+        4
+      ],
+      "scores": [
+        -16,
+        -4,
+        -16,
+        -16,
+        -3,
+        -4,
+        -16
+      ],
+      "match": true,
+      "chain_length": 4,
+      "failure_depth": 12
+    },
+    {
+      "depth": 8,
+      "labeled": true,
+      "action": 1,
+      "best_moves": [
+        1
+      ],
+      "scores": [
+        -17,
+        0,
+        -17,
+        -17,
+        -17,
+        -17,
+        -17
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": 9
+    },
+    {
+      "depth": 8,
+      "labeled": true,
+      "action": 2,
+      "best_moves": [
+        2
+      ],
+      "scores": [
+        15,
+        -4,
+        16,
+        4,
+        -17,
+        -3,
+        -3
+      ],
+      "match": true,
+      "chain_length": 3,
+      "failure_depth": null
+    },
+    {
+      "depth": 8,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        2
+      ],
+      "scores": [
+        -3,
+        -2,
+        2,
+        -2,
+        -1,
+        -2,
+        -4
+      ],
+      "match": false,
+      "chain_length": 8,
+      "failure_depth": null
+    },
+    {
+      "depth": 12,
+      "labeled": true,
+      "action": 5,
+      "best_moves": [
+        5,
+        0
+      ],
+      "scores": [
+        -5,
+        -10,
+        -11,
+        -11,
+        -13,
+        -5,
+        -11
+      ],
+      "match": true,
+      "chain_length": 0,
+      "failure_depth": 12
+    },
+    {
+      "depth": 12,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        1
+      ],
+      "scores": [
+        -2,
+        2,
+        -1,
+        0,
+        1,
+        -2,
+        -1
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 12
+    },
+    {
+      "depth": 12,
+      "labeled": true,
+      "action": 2,
+      "best_moves": [
+        2
+      ],
+      "scores": [
+        0,
+        2,
+        15,
+        3,
+        0,
+        -2,
+        -2
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": null
+    },
+    {
+      "depth": 12,
+      "labeled": true,
+      "action": 1,
+      "best_moves": [
+        3,
+        1,
+        5
+      ],
+      "scores": [
+        -6,
+        -5,
+        -11,
+        -5,
+        -11,
+        -5,
+        -6
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": 13
+    }
+  ],
+  "summary": {
+    "sampled_state_match_rate": 0.8421052631578947,
+    "sampled_state_matches": 16,
+    "sampled_state_labeled": 19,
+    "mean_chain_length": 2.263157894736842,
+    "mean_failure_depth": 6.6,
+    "failure_count": 15,
+    "sample_count": 19
+  }
+}

@@ -1,0 +1,382 @@
+{
+  "metadata": {
+    "game": "Connect Four",
+    "variant": "Vanilla",
+    "board": "6x7",
+    "seed": 0,
+    "checkpoint": "Results/Connect-Four/Vanilla/6x7/seed_0/model_19_ConnectFour.pt"
+  },
+  "records": [
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 1,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -2,
+        -1,
+        0,
+        1,
+        0,
+        -1,
+        -2
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 0
+    },
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 1,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -2,
+        -1,
+        0,
+        1,
+        0,
+        -1,
+        -2
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 0
+    },
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 1,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -2,
+        -1,
+        0,
+        1,
+        0,
+        -1,
+        -2
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 0
+    },
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 1,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -2,
+        -1,
+        0,
+        1,
+        0,
+        -1,
+        -2
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 0
+    },
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 1,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -2,
+        -1,
+        0,
+        1,
+        0,
+        -1,
+        -2
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 0
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        5
+      ],
+      "scores": [
+        -3,
+        0,
+        -2,
+        0,
+        -2,
+        2,
+        -3
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 4
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 4,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -2,
+        0,
+        3,
+        4,
+        0,
+        0,
+        -2
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 4
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 1,
+      "best_moves": [
+        4
+      ],
+      "scores": [
+        2,
+        2,
+        2,
+        2,
+        3,
+        2,
+        2
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 4
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        5
+      ],
+      "scores": [
+        0,
+        0,
+        -1,
+        -2,
+        2,
+        3,
+        0
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 4
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -1,
+        0,
+        0,
+        5,
+        0,
+        0,
+        -2
+      ],
+      "match": true,
+      "chain_length": 2,
+      "failure_depth": 6
+    },
+    {
+      "depth": 8,
+      "labeled": true,
+      "action": 2,
+      "best_moves": [
+        2
+      ],
+      "scores": [
+        -2,
+        -1,
+        2,
+        1,
+        -2,
+        1,
+        -3
+      ],
+      "match": true,
+      "chain_length": 3,
+      "failure_depth": 11
+    },
+    {
+      "depth": 8,
+      "labeled": true,
+      "action": 4,
+      "best_moves": [
+        4
+      ],
+      "scores": [
+        2,
+        2,
+        2,
+        4,
+        16,
+        2,
+        -2
+      ],
+      "match": true,
+      "chain_length": 3,
+      "failure_depth": null
+    },
+    {
+      "depth": 8,
+      "labeled": true,
+      "action": 4,
+      "best_moves": [
+        4
+      ],
+      "scores": [
+        2,
+        3,
+        12,
+        12,
+        17,
+        11,
+        5
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": null
+    },
+    {
+      "depth": 8,
+      "labeled": true,
+      "action": 4,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -5,
+        -7,
+        -3,
+        -2,
+        -3,
+        -3,
+        -5
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 8
+    },
+    {
+      "depth": 12,
+      "labeled": true,
+      "action": 1,
+      "best_moves": [
+        1
+      ],
+      "scores": [
+        -3,
+        15,
+        -2,
+        14,
+        -2,
+        -2,
+        14
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": null
+    },
+    {
+      "depth": 12,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        3,
+        4,
+        6
+      ],
+      "scores": [
+        -2,
+        -2,
+        -2,
+        2,
+        2,
+        -1,
+        2
+      ],
+      "match": true,
+      "chain_length": 4,
+      "failure_depth": 16
+    },
+    {
+      "depth": 12,
+      "labeled": true,
+      "action": 6,
+      "best_moves": [
+        6
+      ],
+      "scores": [
+        -14,
+        -14,
+        -14,
+        -15,
+        -14,
+        -14,
+        -3
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": 13
+    },
+    {
+      "depth": 12,
+      "labeled": true,
+      "action": 3,
+      "best_moves": [
+        3
+      ],
+      "scores": [
+        -15,
+        -15,
+        11,
+        15,
+        -15,
+        -15,
+        -15
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": null
+    }
+  ],
+  "summary": {
+    "sampled_state_match_rate": 0.4444444444444444,
+    "sampled_state_matches": 8,
+    "sampled_state_labeled": 18,
+    "mean_chain_length": 0.8888888888888888,
+    "mean_failure_depth": 5.0,
+    "failure_count": 14,
+    "sample_count": 18
+  }
+}

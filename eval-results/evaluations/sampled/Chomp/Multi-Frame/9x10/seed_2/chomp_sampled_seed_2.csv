@@ -1,0 +1,16 @@
+depth,labeled,action,best_moves,match,chain_length,failure_depth
+0,True,3,"[67, 84]",False,0,0
+0,True,40,"[67, 84]",False,0,0
+0,True,40,"[67, 84]",False,0,0
+0,True,3,"[67, 84]",False,0,0
+0,True,3,"[67, 84]",False,0,0
+4,True,10,[10],True,1,
+4,True,30,[32],False,0,4
+4,True,20,[5],False,0,4
+4,True,2,[62],False,0,4
+4,True,20,"[12, 20]",True,1,
+8,True,3,"[4, 30]",False,0,8
+8,True,9,[6],False,0,8
+8,True,3,[9],False,0,8
+8,True,3,[3],True,1,
+12,False,,[],,0,

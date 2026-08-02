@@ -1,0 +1,149 @@
+{
+  "metadata": {
+    "game": "Chomp",
+    "variant": "Multi-Frame",
+    "board": "10x11",
+    "seed": 1,
+    "checkpoint": "Results/Chomp/MultiFrame/10x11/seed_1/model_9_Chomp(10x11).pt"
+  },
+  "records": [
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 4,
+      "best_moves": [
+        24
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 0
+    },
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 22,
+      "best_moves": [
+        24
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 0
+    },
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 58,
+      "best_moves": [
+        24
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 0
+    },
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 105,
+      "best_moves": [
+        24
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 0
+    },
+    {
+      "depth": 0,
+      "labeled": true,
+      "action": 20,
+      "best_moves": [
+        24
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 0
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 2,
+      "best_moves": [
+        28
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 4
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 33,
+      "best_moves": [
+        33
+      ],
+      "match": true,
+      "chain_length": 1,
+      "failure_depth": null
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 22,
+      "best_moves": [
+        89
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 4
+    },
+    {
+      "depth": 4,
+      "labeled": true,
+      "action": 22,
+      "best_moves": [
+        17,
+        27
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 4
+    },
+    {
+      "depth": 8,
+      "labeled": true,
+      "action": 2,
+      "best_moves": [
+        16
+      ],
+      "match": false,
+      "chain_length": 0,
+      "failure_depth": 8
+    },
+    {
+      "depth": 8,
+      "labeled": false,
+      "action": null,
+      "best_moves": [],
+      "match": null,
+      "chain_length": 0,
+      "failure_depth": null
+    },
+    {
+      "depth": 8,
+      "labeled": false,
+      "action": null,
+      "best_moves": [],
+      "match": null,
+      "chain_length": 0,
+      "failure_depth": null
+    }
+  ],
+  "summary": {
+    "sampled_state_match_rate": 0.1,
+    "sampled_state_matches": 1,
+    "sampled_state_labeled": 10,
+    "mean_chain_length": 0.08333333333333333,
+    "mean_failure_depth": 2.2222222222222223,
+    "failure_count": 9,
+    "sample_count": 12
+  }
+}
