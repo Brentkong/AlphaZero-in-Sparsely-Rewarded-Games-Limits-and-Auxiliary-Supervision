@@ -2,6 +2,11 @@
 
 This repository contains the training code, oracle tooling, traces, and plotting scripts for **"AlphaZero in Sparsely Rewarded Games: Limits and Auxiliary Supervision."** The project studies the gap between strong empirical play and exact oracle-consistent play in AlphaZero-style agents.
 
+## Paper
+
+- arXiv: [arxiv.org/abs/2607.08984](https://arxiv.org/abs/2607.08984)
+- OpenReview (TMLR): [openreview.net/forum?id=1z0CnFiJKg](https://openreview.net/forum?id=1z0CnFiJKg)
+
 The current checkout is organized as a directory-based snapshot of the experiment variants, not as a branch-only layout.
 
 ## Current Layout
@@ -251,13 +256,16 @@ The repository also includes generated assets, including:
 
 ## Citation
 
-If you use this repository, please cite the associated paper:
+If you use this repository, please cite the associated paper ([arXiv](https://arxiv.org/abs/2607.08984), [OpenReview](https://openreview.net/forum?id=1z0CnFiJKg)):
 
 ```bibtex
-@article{alphazero_sparse_auxiliary,
+@article{kong2026alphazero,
   title={AlphaZero in Sparsely Rewarded Games: Limits and Auxiliary Supervision},
-  author={Anonymous Authors},
-  journal={Preliminary work / under review},
-  year={2026}
+  author={Kong, Brent and Ram, Tejas and Yu, Tony Yue},
+  journal={arXiv preprint arXiv:2607.08984},
+  year={2026},
+  eprint={2607.08984},
+  archivePrefix={arXiv},
+  url={https://arxiv.org/abs/2607.08984}
 }
 ```
