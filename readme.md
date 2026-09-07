@@ -1,11 +1,9 @@
 # AlphaZero in Sparsely Rewarded Games: Limits and Auxiliary Supervision
 
+[![arXiv](https://img.shields.io/badge/arXiv-2607.08984-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2607.08984)
+[![OpenReview](https://img.shields.io/badge/OpenReview-TMLR-8c1b13?style=for-the-badge)](https://openreview.net/forum?id=1z0CnFiJKg)
+
 This repository contains the training code, oracle tooling, traces, and plotting scripts for **"AlphaZero in Sparsely Rewarded Games: Limits and Auxiliary Supervision."** The project studies the gap between strong empirical play and exact oracle-consistent play in AlphaZero-style agents.
-
-## Paper
-
-- arXiv: [arxiv.org/abs/2607.08984](https://arxiv.org/abs/2607.08984)
-- OpenReview (TMLR): [openreview.net/forum?id=1z0CnFiJKg](https://openreview.net/forum?id=1z0CnFiJKg)
 
 The current checkout is organized as a directory-based snapshot of the experiment variants, not as a branch-only layout.
 
